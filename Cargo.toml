@@ -1,5 +1,5 @@
 [workspace]
 
-members = ["utils/fetch_day", "rs/day_1"]
-
 default-members = ["utils/fetch_day"]
+
+members = ["utils/fetch_day", "rs/day_1"]

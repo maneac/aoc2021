@@ -1,12 +1,14 @@
+use std::path::Path;
+
 fn main() {
-    let data = read_data();
+    let data = read_data("./data");
 
     println!("Part 1: {}", part_1(&data));
     println!("Part 2: {}", part_2(&data));
 }
 
-fn read_data() -> Vec<usize> {
-    std::fs::read_to_string("../../data/day_1.txt")
+fn read_data(data_dir: &str) -> Vec<usize> {
+    std::fs::read_to_string(Path::new(data_dir).join("day_1.txt"))
         .unwrap()
         .trim()
         .lines()
@@ -68,14 +70,14 @@ mod tests {
 
     #[test]
     fn test_part_1_real() {
-        let data = read_data();
+        let data = read_data("../../data");
 
         assert_eq!("1374", part_1(&data));
     }
 
     #[test]
     fn test_part_2_real() {
-        let data = read_data();
+        let data = read_data("../../data");
 
         assert_eq!("1418", part_2(&data));
     }
