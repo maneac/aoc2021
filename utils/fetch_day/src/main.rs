@@ -1,27 +1,97 @@
+use chrono::{Datelike, Utc};
+use clap::Parser;
 use regex::Regex;
 use reqwest::Error;
 use std::{
-    env::args,
-    fs::{read_to_string, remove_file, write},
+    fs::{create_dir_all, read_to_string, remove_file, write},
     iter::Peekable,
     path::Path,
     str::Chars,
 };
 
-fn main() {
-    let token = env!("AOC_SESSION_TOKEN");
+#[derive(clap::Parser, Debug)]
+struct Opts {
+    #[clap(
+        short,
+        long = "day",
+        value_name = "DAY",
+        possible_values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
+        about = "Day to download the instructions and input for (defaults to the min(current day, 25) in EST)"
+    )]
+    day_opt: Option<usize>,
 
-    let day = args().last().unwrap().parse::<usize>().unwrap();
+    #[clap(default_value = "0")]
+    day: usize,
+
+    #[clap(
+        short = 'f',
+        long = "download",
+        about = "Force the download of the instructions"
+    )]
+    force_download: bool,
+
+    #[clap(long, about = "Skip the downloading of the input data")]
+    no_data: bool,
+
+    #[clap(
+        short,
+        long,
+        use_delimiter = true,
+        possible_values = ["go", "rs", "ts", ""],
+        default_value = "go,rs,ts",
+        about = "Languages to create instructions and templates for"
+    )]
+    langs: Option<Vec<String>>,
+
+    #[clap(long, about = "Skip code template creation for each language")]
+    skip_templates: bool,
+
+    #[clap(long, about = "Keep the raw instruction HTML file")]
+    keep_instructions: bool,
+
+    #[clap(
+        long,
+        about = "Update the READMEs to contain part 2. Alias for '--download --no-data --skip-templates'"
+    )]
+    part_2: bool,
+}
+
+fn main() {
+    let opts = {
+        let mut opts = Opts::parse();
+        opts.day = opts.day_opt.unwrap_or(
+            Utc::now()
+                .with_timezone(&chrono::offset::FixedOffset::west(5 * 3600)) // EST
+                .day()
+                .min(25) as usize,
+        );
+
+        if opts.part_2 {
+            opts.force_download = true;
+            opts.no_data = true;
+            opts.skip_templates = true;
+        }
+        opts
+    };
+    let day = opts.day;
+
+    let token = env!("AOC_SESSION_TOKEN");
 
     let day_url = format!("https://adventofcode.com/2021/day/{}", day);
 
     let instruction_file = Path::new("instructions.html");
-    let instructions_html = if !instruction_file.exists() {
+    let instructions_html = if opts.force_download || !instruction_file.exists() {
         let instructions = retrieve_instructions(token, &day_url).unwrap();
-        write(instruction_file, &instructions).unwrap();
+        if opts.keep_instructions {
+            write(instruction_file, &instructions).unwrap();
+        }
         instructions
     } else {
-        read_to_string(instruction_file).unwrap()
+        let instructions = read_to_string(instruction_file).unwrap();
+        if !opts.keep_instructions {
+            remove_file(instruction_file).unwrap();
+        }
+        instructions
     };
 
     let parts = Regex::new(r"(?s)<article.*?>(.+?)</article>")
@@ -30,7 +100,7 @@ fn main() {
         .map(|caps| caps.get(1).unwrap().as_str())
         .collect::<Vec<&str>>();
 
-    let output = parts
+    let readme_contents = parts
         .iter()
         .map(|part| {
             let mut output = String::new();
@@ -44,17 +114,22 @@ fn main() {
         .collect::<Vec<String>>()
         .join("\n");
 
-    add_ts_template(&output, day);
-    add_go_template(&output, day);
-    add_rs_template(&output, day);
-
-    let data_file = Path::new("data").join(format!("day_{}.txt", &day));
-    if !data_file.exists() {
-        let data = download_input(token, &day_url).unwrap();
-        write(data_file, data).unwrap();
+    if let Some(langs) = &opts.langs {
+        langs.iter().for_each(|lang| match lang.as_str() {
+            "ts" => add_ts_template(&opts, &readme_contents, day),
+            "go" => add_go_template(&opts, &readme_contents, day),
+            "rs" => add_rs_template(&opts, &readme_contents, day),
+            _ => panic!("unknown language: {}", &lang),
+        });
     }
 
-    remove_file(instruction_file).unwrap();
+    if !opts.no_data {
+        let data_file = Path::new("data").join(format!("day_{}.txt", &day));
+        if !data_file.exists() {
+            let data = download_input(token, &day_url).unwrap();
+            write(data_file, data).unwrap();
+        }
+    }
 }
 
 fn retrieve_instructions(token: &str, day_url: &str) -> Result<String, Error> {
@@ -78,10 +153,10 @@ fn download_input(token: &str, day_url: &str) -> Result<String, Error> {
 }
 
 fn recursive_parse<'a>(day_url: &str, input: &mut Peekable<Chars<'a>>) -> String {
-    let raw_tag = input
-        .take_while(|c| c.ne(&'>'))
-        .collect::<Vec<char>>()
-        .iter()
+    let whole_tag = input.take_while(|c| c.ne(&'>')).collect::<String>();
+
+    let raw_tag = whole_tag
+        .chars()
         .take_while(|&c| c.ne(&' '))
         .collect::<String>();
 
@@ -96,9 +171,16 @@ fn recursive_parse<'a>(day_url: &str, input: &mut Peekable<Chars<'a>>) -> String
         "h2" => output.push_str("\n## "),
         "em" => output.push_str("**"),
         "code" => output.push_str("`"),
-        "pre" => output.push_str("<pre>"),
+        "pre" => output.push_str("\n\n<pre>"),
         "p" => output.push_str("\n\n"),
-        _ => {}
+        "span" => {}
+        "ul" => output.push('\n'),
+        "li" => output.push_str("  - "),
+        "a" => output.push('['),
+        "" if input.peek().is_none() => {}
+        _ => {
+            panic!("unknown tag: {}", tag)
+        }
     }
 
     loop {
@@ -138,19 +220,41 @@ fn recursive_parse<'a>(day_url: &str, input: &mut Peekable<Chars<'a>>) -> String
                 .join("\n");
             output.push_str("</pre>")
         }
-        _ => {}
+        "a" => {
+            let link = Regex::new(r#"href="(.+?)""#)
+                .unwrap()
+                .captures(&whole_tag)
+                .and_then(|caps| Some(caps.get(1).unwrap().as_str()))
+                .unwrap();
+            output.push_str(&format!("]({})", link));
+        }
+        "p" | "span" | "h2" | "ul" | "li" => {}
+        _ => {
+            panic!("unknown tag: {}", tag)
+        }
+    }
+
+    output = output.trim_end().to_string();
+
+    // hack to ensure emphasised code blocks have the correct operation order
+    if output.starts_with("`**") && output.ends_with("**`") {
+        output = format!("**`{}`**", &output[3..(output.len() - 3)]);
     }
 
     output
 }
 
-fn add_ts_template(readme: &str, day: usize) {
+fn add_ts_template(opts: &Opts, readme: &str, day: usize) {
     let lang_instruction_dir = Path::new("ts").join(format!("day_{}", &day));
 
     if !lang_instruction_dir.exists() {
-        std::fs::create_dir_all(&lang_instruction_dir).unwrap();
+        create_dir_all(&lang_instruction_dir).unwrap();
     }
     write(lang_instruction_dir.join("README.md"), &readme).unwrap();
+
+    if opts.skip_templates {
+        return;
+    }
 
     write(
         lang_instruction_dir.join("main.ts"),
@@ -195,13 +299,17 @@ Deno.test("part 2 real", () => {
     .unwrap();
 }
 
-fn add_go_template(readme: &str, day: usize) {
+fn add_go_template(opts: &Opts, readme: &str, day: usize) {
     let lang_instruction_dir = Path::new("go").join(format!("day_{}", &day));
 
     if !lang_instruction_dir.exists() {
-        std::fs::create_dir_all(&lang_instruction_dir).unwrap();
+        create_dir_all(&lang_instruction_dir).unwrap();
     }
     write(lang_instruction_dir.join("README.md"), &readme).unwrap();
+
+    if opts.skip_templates {
+        return;
+    }
 
     write(
         lang_instruction_dir.join("main.go"),
@@ -258,7 +366,7 @@ func TestPart1(t *testing.T) {
 	}
 }
 
-ffunc TestPart2(t *testing.T) {
+func TestPart2(t *testing.T) {
 	tests := map[string]struct {
 		data     []string
 		expected string
@@ -283,13 +391,22 @@ ffunc TestPart2(t *testing.T) {
     .unwrap();
 }
 
-fn add_rs_template(readme: &str, day: usize) {
+fn add_rs_template(opts: &Opts, readme: &str, day: usize) {
     let lang_instruction_dir = Path::new("rs").join(format!("day_{}", &day));
 
     if !lang_instruction_dir.exists() {
-        std::fs::create_dir_all(&lang_instruction_dir.join("src")).unwrap();
+        create_dir_all(&lang_instruction_dir).unwrap();
     }
     write(lang_instruction_dir.join("README.md"), &readme).unwrap();
+
+    if opts.skip_templates {
+        return;
+    }
+
+    let src_dir = lang_instruction_dir.join("src");
+    if !src_dir.exists() {
+        create_dir_all(&src_dir).unwrap();
+    }
 
     write(
         lang_instruction_dir.join("Cargo.toml"),
@@ -307,15 +424,17 @@ edition = "2021"
     .unwrap();
 
     write(
-        lang_instruction_dir.join("src").join("main.rs"),
-        r#"fn main() {
-    let data = read_data();
+        src_dir.join("main.rs"),
+        r#"use std::path::Path;
+        
+fn main() {
+    let data = read_data("./data");
 
     println!("Part 1: {}", part_1(&data));
     println!("Part 2: {}", part_2(&data));
 }
 
-fn read_data() -> Vec<String> {
+fn read_data(data_dir: &str) -> Vec<String> {
     todo!()
 }
 
@@ -333,14 +452,14 @@ mod tests {
 
     #[test]
     fn test_part_1_real() {
-        let data = read_data();
+        let data = read_data("../../data");
 
         assert_eq!("", part_1(&data));
     }
 
     #[test]
     fn test_part_2_real() {
-        let data = read_data();
+        let data = read_data("../../data");
 
         assert_eq!("", part_2(&data));
     }

@@ -5,7 +5,7 @@ const readDay: () => number = () => {
 
   // default to latest day
   let day = 0;
-  for (const entry of Deno.readDirSync(".")) {
+  for (const entry of Deno.readDirSync("./ts")) {
     if (entry.isDirectory) {
       day++;
     }
