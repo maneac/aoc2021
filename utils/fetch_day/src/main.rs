@@ -236,28 +236,49 @@ func part2(input []string) string {
 
 import "testing"
 
-func TestPart1Real(t *testing.T) {
-    data := readData()
+func TestPart1(t *testing.T) {
+	tests := map[string]struct {
+		data     []string
+		expected string
+	}{
+		"actual": {
+			data:     readData(),
+			expected: "",
+		},
+	}
 
-    expected := ""
-    actual := part1(data)
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := part1(test.data)
 
-    if actual != expected {
-        t.Fatalf("Expected: %v\nActual: %v", expected, actual)
-    }
+			if actual != test.expected {
+				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
+			}
+		})
+	}
 }
 
-func TestPart2Real(t *testing.T) {
-    data := readData()
+ffunc TestPart2(t *testing.T) {
+	tests := map[string]struct {
+		data     []string
+		expected string
+	}{
+		"actual": {
+			data:     readData(),
+			expected: "",
+		},
+	}
 
-    expected := ""
-    actual := part2(data)
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := part2(test.data)
 
-    if actual != expected {
-        t.Fatalf("Expected: %v\nActual: %v", expected, actual)
-    }
-}
-"#,
+			if actual != test.expected {
+				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
+			}
+		})
+	}
+}"#,
     )
     .unwrap();
 }
@@ -325,6 +346,19 @@ mod tests {
     }
 }
 "#,
+    )
+    .unwrap();
+
+    write(
+        "Cargo.toml",
+        format!(
+            r#"{}, "rs/day_{}"]
+"#,
+            read_to_string("Cargo.toml")
+                .unwrap()
+                .trim_end_matches(&['\n', ']'][..]),
+            day
+        ),
     )
     .unwrap();
 }
