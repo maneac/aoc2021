@@ -2,4 +2,4 @@
 
 default-members = ["utils/fetch_day"]
 
-members = ["utils/fetch_day", "rs/day_1", "rs/day_2"]
+members = ["utils/fetch_day", "rs/day_1", "rs/day_2", "rs/day_3"]
