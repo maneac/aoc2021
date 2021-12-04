@@ -1,3 +1,5 @@
+#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+
 use std::path::Path;
 
 fn main() {
@@ -16,7 +18,7 @@ fn read_data(data_dir: &str) -> Vec<usize> {
         .collect()
 }
 
-fn part_1(input: &Vec<usize>) -> String {
+fn part_1(input: &[usize]) -> String {
     input
         .iter()
         .fold((0usize, None), |(mut acc, last_val_opt), val| {
@@ -35,7 +37,7 @@ fn part_1(input: &Vec<usize>) -> String {
         .to_string()
 }
 
-fn part_2(input: &Vec<usize>) -> String {
+fn part_2(input: &[usize]) -> String {
     input
         .iter()
         .fold((0usize, [None; 3]), |(mut acc, last_vals_opts), val| {

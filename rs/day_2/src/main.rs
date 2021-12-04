@@ -1,3 +1,5 @@
+#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+
 use std::{fs::read_to_string, path::Path, str::FromStr};
 
 fn main() {
@@ -38,14 +40,14 @@ fn read_data(data_dir: &str) -> Vec<Instruction> {
         .collect()
 }
 
-fn part_1(input: &Vec<Instruction>) -> String {
+fn part_1(input: &[Instruction]) -> String {
     let (horizontal, depth) = input.iter().fold(
         (0usize, 0usize),
         |(mut horizontal, mut depth), instruction| {
             match instruction {
-                &Instruction::Forward(n) => horizontal += n,
-                &Instruction::Down(n) => depth += n,
-                &Instruction::Up(n) => depth -= n,
+                Instruction::Forward(n) => horizontal += n,
+                Instruction::Down(n) => depth += n,
+                Instruction::Up(n) => depth -= n,
             }
             (horizontal, depth)
         },
@@ -53,17 +55,17 @@ fn part_1(input: &Vec<Instruction>) -> String {
     (horizontal * depth).to_string()
 }
 
-fn part_2(input: &Vec<Instruction>) -> String {
+fn part_2(input: &[Instruction]) -> String {
     let (horizontal, depth, _) = input.iter().fold(
         (0usize, 0usize, 0usize),
         |(mut horizontal, mut depth, mut aim), instruction| {
             match instruction {
-                &Instruction::Forward(n) => {
+                Instruction::Forward(n) => {
                     horizontal += n;
                     depth += aim * n;
                 }
-                &Instruction::Down(n) => aim += n,
-                &Instruction::Up(n) => aim -= n,
+                Instruction::Down(n) => aim += n,
+                Instruction::Up(n) => aim -= n,
             }
             (horizontal, depth, aim)
         },

@@ -1,3 +1,5 @@
+#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+
 use std::{fs::read_to_string, path::Path};
 
 fn main() {
@@ -16,7 +18,7 @@ fn read_data(data_dir: &str) -> Vec<Vec<bool>> {
         .collect()
 }
 
-fn part_1(input: &Vec<Vec<bool>>) -> String {
+fn part_1(input: &[Vec<bool>]) -> String {
     let entry_len = input[0].len();
     let (gamma, epsilon) = input
         .iter()
@@ -48,11 +50,11 @@ fn part_1(input: &Vec<Vec<bool>>) -> String {
     (epsilon * gamma).to_string()
 }
 
-fn part_2(input: &Vec<Vec<bool>>) -> String {
+fn part_2(input: &[Vec<bool>]) -> String {
     let entry_len = input[0].len();
 
     let oxygen_generator_rating = {
-        let mut filtered_input = input.clone();
+        let mut filtered_input = input.to_owned();
         for idx in 0..entry_len {
             if filtered_input.len() == 1 {
                 break;
@@ -89,7 +91,7 @@ fn part_2(input: &Vec<Vec<bool>>) -> String {
     };
 
     let co2_scrubber_rating = {
-        let mut filtered_input = input.clone();
+        let mut filtered_input = input.to_owned();
         for idx in 0..entry_len {
             if filtered_input.len() == 1 {
                 break;
