@@ -8,6 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  AOC_SESSION_TOKEN: ''
 
 jobs:
   check:
@@ -62,6 +63,13 @@ jobs:
           badge: true
           format: 'markdown'
           output: 'both'
+
+        - name: Add Coverage PR Comment
+          uses: marocchino/sticky-pull-request-comment@v2
+          if: github.event_name == 'pull_request'
+          with:
+            recreate: true
+            path: code-coverage-results.md
 
   format:
     name: Format
