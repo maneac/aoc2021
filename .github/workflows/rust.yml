@@ -8,7 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  AOC_SESSION_TOKEN: ''
+  AOC_SESSION_TOKEN: ""
 
 jobs:
   check:
