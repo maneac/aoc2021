@@ -237,8 +237,8 @@ fn recursive_parse<'a>(day_url: &str, input: &mut Peekable<Chars<'a>>) -> String
     output = output.trim_end().to_string();
 
     // hack to ensure emphasised code blocks have the correct operation order
-    if output.starts_with("`**") && output.ends_with("**`") {
-        output = format!("**`{}`**", &output[3..(output.len() - 3)]);
+    if output.starts_with("`") && output.contains("**") {
+        output = format!("**{}**", &output.replace("**", ""));
     }
 
     output
