@@ -1,3 +1,5 @@
+#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+
 use chrono::{Datelike, Utc};
 use clap::Parser;
 use regex::Regex;
@@ -165,7 +167,7 @@ fn recursive_parse<'a>(
         .collect::<String>();
 
     let mut tag = raw_tag.trim();
-    if let Some(t) = tag.strip_prefix("<") {
+    if let Some(t) = tag.strip_prefix('<') {
         tag = t;
     }
 
@@ -177,7 +179,7 @@ fn recursive_parse<'a>(
         "em" if is_preformatted => output.push_str("<b>"),
         "code" if is_preformatted => output.push_str("<code>"),
         "em" => output.push_str("**"),
-        "code" => output.push_str("`"),
+        "code" => output.push('`'),
         "pre" => {
             output.push_str("\n\n<pre>");
             pre = true
@@ -220,13 +222,13 @@ fn recursive_parse<'a>(
         "em" if is_preformatted => output.push_str("</b>"),
         "code" if is_preformatted => output.push_str("</code>"),
         "em" => output.push_str("**"),
-        "code" => output.push_str("`"),
+        "code" => output.push('`'),
         "pre" => output.push_str("</pre>"),
         "a" => {
             let link = Regex::new(r#"href="(.+?)""#)
                 .unwrap()
                 .captures(&whole_tag)
-                .and_then(|caps| Some(caps.get(1).unwrap().as_str()))
+                .map(|caps| caps.get(1).unwrap().as_str())
                 .unwrap();
             output.push_str(&format!("]({})", link));
         }
@@ -239,7 +241,7 @@ fn recursive_parse<'a>(
     output = output.trim_end().to_string();
 
     // hack to ensure emphasised code blocks have the correct operation order
-    if output.starts_with("`") && output.contains("**") {
+    if output.starts_with('`') && output.contains("**") {
         output = format!("**{}**", &output.replace("**", ""));
     }
 
@@ -427,7 +429,9 @@ edition = "2021"
 
     write(
         src_dir.join("main.rs"),
-        r#"use std::path::Path;
+        r#"#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+
+use std::path::Path;
         
 fn main() {
     let data = read_data("./data");
