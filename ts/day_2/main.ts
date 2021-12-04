@@ -18,7 +18,7 @@ export function readData(): Instruction[] {
   );
 }
 
-export function part1(data: Instruction[]) {
+export function part1(data: Instruction[]): number {
   let horizontal = 0;
   let depth = 0;
   for (const line of data) {
@@ -36,7 +36,7 @@ export function part1(data: Instruction[]) {
   return (horizontal * depth);
 }
 
-export function part2(data: Instruction[]) {
+export function part2(data: Instruction[]): number {
   let horizontal = 0;
   let aim = 0;
   let depth = 0;
