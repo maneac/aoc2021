@@ -51,7 +51,7 @@ jobs:
           args: "--packages \"day_*\" -- --test-threads 1"
         
       - name: Replace NaNs
-        run: sed -i 's/NaN/0/g' cobertura.xml
+        run: sed -i 's/src" line-rate="NaN"/src" line-rate="0"/g' cobertura.xml
 
       - name: Archive coverage results
         uses: actions/upload-artifact@v1
