@@ -262,15 +262,15 @@ fn add_ts_template(opts: &Opts, readme: &str, day: usize) {
 
     write(
         lang_instruction_dir.join("main.ts"),
-        r#"export function readData() {
+        r#"export function readData(): any {
     throw new Error("unimplemented");
 }
 
-export function part1(_data: any) {
+export function part1(_data: any): string {
     throw new Error("unimplemented");
 }
 
-export function part2(_data: any) {
+export function part2(_data: any): string {
     throw new Error("unimplemented");
 }
 
@@ -291,13 +291,13 @@ import { part1, part2, readData } from "./main.ts";
 Deno.test("part 1 real", () => {
     const input = readData();
 
-    assertEquals(part1(input), 0);
+    assertEquals(part1(input), "");
 });
 
 Deno.test("part 2 real", () => {
     const input = readData();
 
-    assertEquals(part2(input), 0);
+    assertEquals(part2(input), "");
 });"#,
     )
     .unwrap();
