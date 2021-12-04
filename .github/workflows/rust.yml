@@ -49,6 +49,9 @@ jobs:
         with:
           version: '0.15.0'
           args: "--packages \"day_*\" -- --test-threads 1"
+        
+      - name: Replace NaNs
+        run: sed -i 's/NaN/0/g' cobertura.xml
 
       - name: Archive coverage results
         uses: actions/upload-artifact@v1
@@ -61,6 +64,8 @@ jobs:
         with:
           filename: cobertura.xml
           badge: true
+          hide_branch_rate: true
+          hide_complexity: true
           format: 'markdown'
           output: 'both'
 
