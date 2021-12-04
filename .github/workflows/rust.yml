@@ -51,7 +51,10 @@ jobs:
           args: "--packages \"day_*\" -- --test-threads 1"
         
       - name: Replace NaNs
-        run: sed -i 's/src" line-rate="NaN"/src" line-rate="0"/g' cobertura.xml
+        run: |
+          sed -i 's/src" line-rate="NaN"/src" line-rate="0"/g' cobertura.xml
+          COV_PC=$(python3 -c $(sed -rn 's/.*<coverage lines-covered="([0-9]+)" lines-valid="([0-9]+)".*/print(\1\/\2)/p' cobertura.xml))
+          sed -i 's/NaN/'$COV_PC'/g' cobertura.xml
 
       - name: Archive coverage results
         uses: actions/upload-artifact@v1
