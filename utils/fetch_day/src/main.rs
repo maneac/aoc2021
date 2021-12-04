@@ -106,7 +106,7 @@ fn main() {
             let mut output = String::new();
             let mut iter = part.chars().peekable();
             while iter.peek().is_some() {
-                let out = recursive_parse(&day_url, &mut iter);
+                let out = recursive_parse(&day_url, &mut iter, false);
                 output.push_str(&out);
             }
             output
@@ -152,7 +152,11 @@ fn download_input(token: &str, day_url: &str) -> Result<String, Error> {
     c.execute(req)?.text()
 }
 
-fn recursive_parse<'a>(day_url: &str, input: &mut Peekable<Chars<'a>>) -> String {
+fn recursive_parse<'a>(
+    day_url: &str,
+    input: &mut Peekable<Chars<'a>>,
+    is_preformatted: bool,
+) -> String {
     let whole_tag = input.take_while(|c| c.ne(&'>')).collect::<String>();
 
     let raw_tag = whole_tag
@@ -165,18 +169,24 @@ fn recursive_parse<'a>(day_url: &str, input: &mut Peekable<Chars<'a>>) -> String
         tag = t;
     }
 
+    let mut pre = is_preformatted;
     let mut output = String::new();
 
     match tag {
         "h2" => output.push_str("\n## "),
+        "em" if is_preformatted => output.push_str("<b>"),
+        "code" if is_preformatted => output.push_str("<code>"),
         "em" => output.push_str("**"),
         "code" => output.push_str("`"),
-        "pre" => output.push_str("\n\n<pre>"),
+        "pre" => {
+            output.push_str("\n\n<pre>");
+            pre = true
+        }
         "p" => output.push_str("\n\n"),
-        "span" => {}
         "ul" => output.push('\n'),
         "li" => output.push_str("  - "),
         "a" => output.push('['),
+        "span" => {}
         "" if input.peek().is_none() => {}
         _ => {
             panic!("unknown tag: {}", tag)
@@ -193,7 +203,7 @@ fn recursive_parse<'a>(day_url: &str, input: &mut Peekable<Chars<'a>>) -> String
                     let _ = input.take_while(|c| c.ne(&'>')).collect::<String>();
                     break;
                 }
-                output.push_str(&recursive_parse(day_url, input));
+                output.push_str(&recursive_parse(day_url, input, pre));
             }
             '>' => break,
             v => {
@@ -207,19 +217,11 @@ fn recursive_parse<'a>(day_url: &str, input: &mut Peekable<Chars<'a>>) -> String
             output = output.replace("\n## ", "# [");
             output.push_str(format!("]({})", day_url).as_str());
         }
+        "em" if is_preformatted => output.push_str("</b>"),
+        "code" if is_preformatted => output.push_str("</code>"),
         "em" => output.push_str("**"),
         "code" => output.push_str("`"),
-        "pre" => {
-            output = output
-                .replace("<pre>`", "<pre><code>")
-                .replace("`", "</code>");
-            output = output
-                .split("\n")
-                .map(|line| line.trim())
-                .collect::<Vec<&str>>()
-                .join("\n");
-            output.push_str("</pre>")
-        }
+        "pre" => output.push_str("</pre>"),
         "a" => {
             let link = Regex::new(r#"href="(.+?)""#)
                 .unwrap()
