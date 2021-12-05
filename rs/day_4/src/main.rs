@@ -39,8 +39,7 @@ fn part_1(input: &Input) -> usize {
             });
 
             for i in 0..5 {
-                let row_has_won = board[(5 * i)..(5 * (i + 1))].iter().all(|v| v.is_none());
-
+                let row_has_won = board.iter().skip(5 * i).take(5).all(|v| v.is_none());
                 let col_has_won = board.iter().skip(i).step_by(5).all(|v| v.is_none());
 
                 if row_has_won || col_has_won {
@@ -66,15 +65,8 @@ fn part_2(input: &Input) -> usize {
             .iter()
             .filter_map(|&board| {
                 for i in 0..5 {
-                    let row_has_won = board[(5 * i)..(5 * (i + 1))]
-                        .iter()
-                        .fold(true, |acc, v| acc && v.is_none());
-
-                    let col_has_won = board
-                        .iter()
-                        .skip(i)
-                        .step_by(5)
-                        .fold(true, |acc, v| acc && v.is_none());
+                    let row_has_won = board.iter().skip(5 * i).take(5).all(|v| v.is_none());
+                    let col_has_won = board.iter().skip(i).step_by(5).all(|v| v.is_none());
 
                     if row_has_won || col_has_won {
                         return None;
