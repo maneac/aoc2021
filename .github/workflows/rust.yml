@@ -104,4 +104,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Clippy
-          args: --packages "day_*" --all-features
+          args: --package "day_*" --all-features
