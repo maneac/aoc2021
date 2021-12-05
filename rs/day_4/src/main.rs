@@ -21,7 +21,7 @@ fn read_data(data_dir: &str) -> Input {
         .map(|v| v.parse::<usize>().unwrap())
         .collect();
 
-    let boards = day_parts.map(|b| board_from_str(b)).collect();
+    let boards = day_parts.map(board_from_str).collect();
 
     Input { numbers, boards }
 }
