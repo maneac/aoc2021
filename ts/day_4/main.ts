@@ -1,15 +1,15 @@
-export interface Input {
+interface Input {
   numbers: number[];
   boards: number[][];
 }
 
-export function readData(): Input {
+function readData(): Input {
   const input = Deno.readTextFileSync("./data/day_4.txt").trim();
 
   return parseContents(input);
 }
 
-export function parseContents(input: string): Input {
+function parseContents(input: string): Input {
   const inputParts = input.split("\n\n");
 
   const numbers = inputParts[0].split(",").map((v) => +v);
@@ -28,7 +28,7 @@ export function parseContents(input: string): Input {
   return { numbers, boards };
 }
 
-export function part1(data: Input): number {
+function part1(data: Input): number {
   for (const num of data.numbers) {
     for (const [boardIdx, board] of data.boards.entries()) {
       const newBoard = board.map((v) => v == num ? -1 : v);
@@ -55,7 +55,7 @@ export function part1(data: Input): number {
   throw new Error("no result");
 }
 
-export function part2(data: Input): number {
+function part2(data: Input): number {
   for (const num of data.numbers) {
     data.boards = data.boards.map((board) =>
       board.map((v) => v == num ? -1 : v)
@@ -88,9 +88,12 @@ export function part2(data: Input): number {
   throw new Error("no result");
 }
 
-export function main() {
+function main() {
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
+
+export { main, parseContents, part1, part2, readData };
+export type { Input };

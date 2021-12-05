@@ -1,16 +1,16 @@
 import { assertEquals } from "https://deno.land/std@0.116.0/testing/asserts.ts";
-import { part1, part2, readData } from "./main.ts";
+import * as day from "./main.ts";
 
 Deno.test("part 1 real", () => {
-  const input = readData();
+  const input = day.readData();
 
-  assertEquals(part1(input), 1840243);
+  assertEquals(day.part1(input), 1840243);
 });
 
 Deno.test("part 2 real", () => {
-  const input = readData();
+  const input = day.readData();
 
-  assertEquals(part2(input), 1727785422);
+  assertEquals(day.part2(input), 1727785422);
 });
 
 Deno.test("part 1 example", () => {
@@ -23,7 +23,7 @@ Deno.test("part 1 example", () => {
     { instruction: "forward", amount: 2 },
   ];
 
-  assertEquals(part1(input), 150);
+  assertEquals(day.part1(input), 150);
 });
 
 Deno.test("part 2 example", () => {
@@ -36,5 +36,5 @@ Deno.test("part 2 example", () => {
     { instruction: "forward", amount: 2 },
   ];
 
-  assertEquals(part2(input), 900);
+  assertEquals(day.part2(input), 900);
 });

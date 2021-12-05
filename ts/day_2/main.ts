@@ -3,7 +3,7 @@ interface Instruction {
   amount: number;
 }
 
-export function readData(): Instruction[] {
+function readData(): Instruction[] {
   return Deno.readTextFileSync("./data/day_2.txt").trim().split("\n").map(
     (line) => {
       const lineParts = line.split(" ");
@@ -18,7 +18,7 @@ export function readData(): Instruction[] {
   );
 }
 
-export function part1(data: Instruction[]): number {
+function part1(data: Instruction[]): number {
   let horizontal = 0;
   let depth = 0;
   for (const line of data) {
@@ -36,7 +36,7 @@ export function part1(data: Instruction[]): number {
   return (horizontal * depth);
 }
 
-export function part2(data: Instruction[]): number {
+function part2(data: Instruction[]): number {
   let horizontal = 0;
   let aim = 0;
   let depth = 0;
@@ -56,9 +56,11 @@ export function part2(data: Instruction[]): number {
   return (horizontal * depth);
 }
 
-export function main() {
+function main() {
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
+
+export { main, part1, part2, readData };

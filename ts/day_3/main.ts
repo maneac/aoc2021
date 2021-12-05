@@ -1,4 +1,4 @@
-export function readData(): number[][] {
+function readData(): number[][] {
   return Deno.readTextFileSync("./data/day_3.txt").trim().split("\n").map(
     (line) => {
       return [...line].map((v) => +v);
@@ -6,7 +6,7 @@ export function readData(): number[][] {
   );
 }
 
-export function part1(data: number[][]): number {
+function part1(data: number[][]): number {
   const gamma = data.reduce((acc, cur) => {
     return acc.map((old, idx) => old + cur[idx]);
   }).reduce((acc, c) => {
@@ -18,7 +18,7 @@ export function part1(data: number[][]): number {
   return gamma * (~gamma & ((2 ** data[0].length) - 1));
 }
 
-export function part2(data: number[][]): number {
+function part2(data: number[][]): number {
   let oxygenFilter = data;
   for (let idx = 0; idx < data[0].length; idx++) {
     if (oxygenFilter.length < 2) {
@@ -60,9 +60,11 @@ export function part2(data: number[][]): number {
   return oxygenRating * carbonRating;
 }
 
-export function main() {
+function main() {
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
+
+export { main, part1, part2, readData };
