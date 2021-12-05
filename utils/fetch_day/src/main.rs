@@ -245,6 +245,11 @@ fn recursive_parse<'a>(
         output = format!("**{}**", &output.replace("**", ""));
     }
 
+    if !is_preformatted {
+        output = output.replace("&gt;", ">");
+        output = output.replace("&lt;", "<");
+    }
+
     output
 }
 
