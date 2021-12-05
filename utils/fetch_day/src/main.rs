@@ -267,43 +267,47 @@ fn add_ts_template(opts: &Opts, readme: &str, day: usize) {
 
     write(
         lang_instruction_dir.join("main.ts"),
-        r#"export function readData(): any {
-    throw new Error("unimplemented");
+        r#"function readData(): any {
+  throw new Error("unimplemented");
 }
 
-export function part1(_data: any): string {
-    throw new Error("unimplemented");
+function part1(_data: any): string {
+  throw new Error("unimplemented");
 }
 
-export function part2(_data: any): string {
-    throw new Error("unimplemented");
+function part2(_data: any): string {
+  throw new Error("unimplemented");
 }
 
-export function main() {
-    const data = readData();
+function main() {
+  const data = readData();
   
-    console.log("Part 1: ", part1(data));
-    console.log("Part 2: ", part2(data));
-}"#,
+  console.log("Part 1: ", part1(data));
+  console.log("Part 2: ", part2(data));
+}
+
+export { main, part1, part2, readData };
+"#,
     )
     .unwrap();
 
     write(
         lang_instruction_dir.join("main.test.ts"),
         r#"import { assertEquals } from "https://deno.land/std@0.116.0/testing/asserts.ts";
-import { part1, part2, readData } from "./main.ts";
+import * as day from "./main.ts";
 
 Deno.test("part 1 real", () => {
-    const input = readData();
+  const input = day.readData();
 
-    assertEquals(part1(input), "");
+  assertEquals(day.part1(input), "");
 });
 
 Deno.test("part 2 real", () => {
-    const input = readData();
+  const input = day.readData();
 
-    assertEquals(part2(input), "");
-});"#,
+  assertEquals(day.part2(input), "");
+});
+"#,
     )
     .unwrap();
 }
@@ -436,7 +440,7 @@ edition = "2021"
         src_dir.join("main.rs"),
         r#"#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
 
-use std::path::Path;
+use std::{fs::read_to_string, path::Path};
         
 fn main() {
     let data = read_data("./data");
