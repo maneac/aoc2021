@@ -149,6 +149,10 @@ name = "day_6"
 version = "0.1.0"
 
 [[package]]
+name = "day_7"
+version = "0.1.0"
+
+[[package]]
 name = "encoding_rs"
 version = "0.8.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
