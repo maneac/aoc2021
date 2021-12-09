@@ -1,21 +1,24 @@
 package main
 
-import (
-	"testing"
+import "testing"
+
+const (
+	part1Solution = 3148794
+	part2Solution = 2795310
 )
 
 func TestPart1(t *testing.T) {
 	tests := map[string]struct {
 		data     *treeNode
-		expected string
+		expected int
 	}{
 		"example": {
 			data:     exampleBalancedTree(),
-			expected: "198",
+			expected: 198,
 		},
 		"actual": {
 			data:     readData(),
-			expected: "3148794",
+			expected: part1Solution,
 		},
 	}
 
@@ -33,15 +36,15 @@ func TestPart1(t *testing.T) {
 func TestPart2(t *testing.T) {
 	tests := map[string]struct {
 		data     *treeNode
-		expected string
+		expected int
 	}{
 		"example": {
 			data:     exampleBalancedTree(),
-			expected: "230",
+			expected: 230,
 		},
 		"actual": {
 			data:     readData(),
-			expected: "2795310",
+			expected: part2Solution,
 		},
 	}
 
@@ -274,4 +277,30 @@ func exampleBalancedTree() *treeNode {
 			}},
 		}},
 	}}
+}
+
+func BenchmarkReadData(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		if readData() == nil {
+			b.FailNow()
+		}
+	}
+}
+
+func BenchmarkPart1(b *testing.B) {
+	data := readData()
+	for i := 0; i < b.N; i++ {
+		if part1(data) != part1Solution {
+			b.FailNow()
+		}
+	}
+}
+
+func BenchmarkPart2(b *testing.B) {
+	data := readData()
+	for i := 0; i < b.N; i++ {
+		if part2(data) != part2Solution {
+			b.FailNow()
+		}
+	}
 }

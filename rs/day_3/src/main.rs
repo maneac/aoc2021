@@ -1,5 +1,6 @@
 #![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
-
+#![feature(test)]
+extern crate test;
 use std::{fs::read_to_string, path::Path};
 
 fn main() {
@@ -18,7 +19,7 @@ fn read_data(data_dir: &str) -> Vec<Vec<bool>> {
         .collect()
 }
 
-fn part_1(input: &[Vec<bool>]) -> String {
+fn part_1(input: &[Vec<bool>]) -> usize {
     let entry_len = input[0].len();
     let (gamma, epsilon) = input
         .iter()
@@ -47,10 +48,10 @@ fn part_1(input: &[Vec<bool>]) -> String {
             },
         );
 
-    (epsilon * gamma).to_string()
+    epsilon * gamma
 }
 
-fn part_2(input: &[Vec<bool>]) -> String {
+fn part_2(input: &[Vec<bool>]) -> usize {
     let entry_len = input[0].len();
 
     let oxygen_generator_rating = {
@@ -127,26 +128,30 @@ fn part_2(input: &[Vec<bool>]) -> String {
             })
     };
 
-    (oxygen_generator_rating * co2_scrubber_rating).to_string()
+    oxygen_generator_rating * co2_scrubber_rating
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::fs::write;
+    use test::Bencher;
+
+    const PART_1: usize = 3148794;
+    const PART_2: usize = 2795310;
 
     #[test]
     fn test_part_1_real() {
         let data = read_data("../../data");
 
-        assert_eq!("3148794", part_1(&data));
+        assert_eq!(PART_1, part_1(&data));
     }
 
     #[test]
     fn test_part_2_real() {
         let data = read_data("../../data");
 
-        assert_eq!("2795310", part_2(&data));
+        assert_eq!(PART_2, part_2(&data));
     }
 
     #[test]
@@ -203,7 +208,7 @@ mod tests {
             vec![false, true, false, true, false],
         ];
 
-        assert_eq!("198", part_1(&input));
+        assert_eq!(198, part_1(&input));
     }
 
     #[test]
@@ -223,6 +228,33 @@ mod tests {
             vec![false, true, false, true, false],
         ];
 
-        assert_eq!("230", part_2(&input));
+        assert_eq!(230, part_2(&input));
+    }
+
+    #[bench]
+    fn bench_read_data(b: &mut Bencher) {
+        b.iter(|| {
+            let data = read_data("../../data");
+
+            assert_ne!(data, Vec::<Vec<bool>>::new());
+        })
+    }
+
+    #[bench]
+    fn bench_part_1(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!(PART_1, part_1(&data));
+        })
+    }
+
+    #[bench]
+    fn bench_part_2(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!(PART_2, part_2(&data));
+        })
     }
 }

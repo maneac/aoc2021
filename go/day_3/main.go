@@ -25,7 +25,7 @@ func readData() *treeNode {
 	return tree
 }
 
-func part1(input *treeNode) string {
+func part1(input *treeNode) int {
 	thisLayer := []*treeNode{input.children[0], input.children[1]}
 	nextLayer := make([]*treeNode, 0, len(thisLayer)<<1)
 
@@ -70,10 +70,10 @@ func part1(input *treeNode) string {
 		}
 	}
 
-	return fmt.Sprint(gammaRate * epsilonRate)
+	return gammaRate * epsilonRate
 }
 
-func part2(input *treeNode) string {
+func part2(input *treeNode) int {
 	oxygenRating := input
 	for oxygenRating.childCount > 0 {
 		if oxygenRating.children[1] != nil {
@@ -92,7 +92,7 @@ func part2(input *treeNode) string {
 		}
 	}
 
-	return fmt.Sprint(oxygenRating.value * scrubberRating.value)
+	return int(oxygenRating.value * scrubberRating.value)
 }
 
 type treeNode struct {
