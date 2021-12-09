@@ -14,12 +14,14 @@ Ensure `AOC_SESSION_TOKEN` (sent as a header in requests on the Advent of Code w
 ### Part 1 + Data
 
 ```bash
+# Using the stable Rust toolchain
 cargo run --release
 ```
 
 ### Part 2
 
 ```bash
+# Using the stable Rust toolchain
 cargo run --release -- --part-2
 ```
 
@@ -48,6 +50,7 @@ Reminder: s = 1000ms, ms = 1000&mu;s, &mu;s = 1000ns
 | 6     | 4.828&mu;s        | **318.3ns**   | **990.3ns**       | 6.137&mu;s        |
 | 7     | 51.669&mu;s       | 411.6ns       | 1.221ms           | 1.274ms           |
 | 8     | 90.356&mu;s       | 763.2ns       | 118.084&mu;s      | 209.203&mu;s      |
+| 9     | 311.895&mu;s      | 708.992&mu;s  | 5.433ms           | 6.453ms           |
 
 ### Rust
 
@@ -61,6 +64,7 @@ Reminder: s = 1000ms, ms = 1000&mu;s, &mu;s = 1000ns
 | 6     | **3.128&mu;s**    | 364ns             | 1.123&mu;s        | **4.615&mu;s**    |
 | 7     | **18.305&mu;s**   | **213ns**         | **700.813&mu;s**  | **719.331&mu;s**  |
 | 8     | **34.029&mu;s**   | **659ns**         | **10.41&mu;s**    | **45.098&mu;s**   |
+| 9     | -                 | -                 | -                 | -                 |
 
 ### TypeScript (Deno)
 
@@ -74,6 +78,7 @@ Reminder: s = 1000ms, ms = 1000&mu;s, &mu;s = 1000ns
 | 6     | 16&mu;s   | 1.2&mu;s  | 4.8&mu;s  | 22&mu;s   |
 | 7     | 172&mu;s  | 4&mu;s    | 2.524ms   | 2.7ms     |
 | 8     | -         | -         | -         | -         |
+| 9     | -         | -         | -         | -         |
 
 ### System Information
 
