@@ -22,7 +22,7 @@ func readData() []string {
 	return strings.Split(strings.TrimSpace(string(contents)), "\n")
 }
 
-func part1(input []string) string {
+func part1(input []string) int {
 	horizontal := 0
 	depth := 0
 	for _, line := range input {
@@ -44,10 +44,10 @@ func part1(input []string) string {
 			panic("unknown instruction: " + instruction)
 		}
 	}
-	return fmt.Sprint(horizontal * depth)
+	return horizontal * depth
 }
 
-func part2(input []string) string {
+func part2(input []string) int {
 	horizontal := 0
 	depth := 0
 	aim := 0
@@ -71,5 +71,5 @@ func part2(input []string) string {
 			panic("unknown instruction: " + instruction)
 		}
 	}
-	return fmt.Sprint(horizontal * depth)
+	return horizontal * depth
 }
