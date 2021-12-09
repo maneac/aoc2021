@@ -1,6 +1,4 @@
 #![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
-#![feature(test)]
-extern crate test;
 use chrono::{Datelike, Utc};
 use clap::Parser;
 use regex::Regex;
