@@ -19,7 +19,7 @@ impl FromStr for Instruction {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let (instruction, distance_str) = s.split_once(" ").unwrap();
+        let (instruction, distance_str) = s.split_once(' ').unwrap();
 
         let distance = distance_str.parse::<usize>().unwrap();
         match instruction {
