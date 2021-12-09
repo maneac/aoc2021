@@ -17,3 +17,10 @@ deno run --allow-read ./ts/run.ts <day_num>
 # From this repository's root
 deno test --allow-read ./ts/day_<day_num>
 ```
+
+## Benchmarking
+
+```bash
+# From this repository's root
+deno test --allow-read ./ts/day_<day_num> --filter "bench"
+```

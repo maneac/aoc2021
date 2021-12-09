@@ -17,3 +17,10 @@ go run ./go/day_<day_num>
 # From this repository's root
 go test ./go/day_<day_num>
 ```
+
+## Benchmarking
+
+```bash
+# From this repository's root
+go test -bench ./go/day_<day_num>
+```
