@@ -39,7 +39,7 @@ The commands used and specifics of each benchmark can be found in each langauge'
 | 4         | 403.665&mu;s      | 144.429&mu;s      | **286.581&mu;s**  | 834.675&mu;s      |&nbsp; | **20.331&mu;s**   | **104.342&mu;s**  | 428.096&mu;s      | **552.769&mu;s**  |&nbsp; | 320&mu;s  | 3.132ms       | 2.936ms       | 6.388ms   |
 | 5         | 461.056&mu;s      | 10.627ms          | 15.657ms          | 26.746ms          |&nbsp; | **25.155&mu;s**   | **1.275ms**       | **1.548ms**       | **2.848ms**       |&nbsp; | 348&mu;s  | 72.576ms      | 54.76ms       | 127.684ms |
 | 6         | 4.828&mu;s        | **318.3ns**       | **990.3ns**       | 6.137&mu;s        |&nbsp; | **3.128&mu;s**    | 364ns             | 1.123&mu;s        | **4.615&mu;s**    |&nbsp; | 16&mu;s   | 1.2&mu;s      | 4.8&mu;s      | 22&mu;s   |
-| 7         | -                 | 0ms               | 0ms               | -                 |&nbsp; | -                 | 0ms               | 0ms               | -                 |&nbsp; | -         | 0ms           | 0ms           | -         |
+| 7         | 51.669&mu;s       | 411.6ns           | 1.221ms           | 1.274ms           |&nbsp; | **18.305&mu;s**   | **213ns**         | **700.813&mu;s**  | **719.331&mu;s**  |&nbsp; | 172&mu;s  | 4&mu;s        | 2.524ms       | 2.7ms     |
 | 8         | -                 | 0ms               | 0ms               | -                 |&nbsp; | -                 | 0ms               | 0ms               | -                 |&nbsp; | -         | 0ms           | 0ms           | -         |
 
 </centre>
