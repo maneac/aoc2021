@@ -31,16 +31,17 @@ The commands used and specifics of each benchmark can be found in each langauge'
 
 | s = 1000ms, ms = 1000&mu;s, &mu;s = 1000ns ||||||||||
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:--:|
-| **Day** | **Go** ||| **Rust** ||| **TypeScript (Deno)\*** |||
-| ^ | **Parse** | **Part 1** | **Part 2** | **Parse** | **Part 1** | **Part 2** | **Parse** | **Part 1** | **Part 2** |
-| 1 | 26.021&mu;s | **640.2ns** | **1.553&mu;s** | **411ns** | 3.833&mu;s | 22.965&mu;s | 116&mu;s | 36&mu;s | 88&mu;s |
-| 2 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
-| 3 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
-| 4 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
-| 5 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
-| 6 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
-| 7 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
-| 8 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
+| **Day**   | **Go**                                            ||| **Rust**                                ||| **TypeScript (Deno)\***               |||
+| ^         | **Parse**     | **Part 1**    | **Part 2**        | **Parse** | **Part 1**    | **Part 2**    | **Parse** | **Part 1**    | **Part 2**    |
+|||||||||||
+| 1         | 26.021&mu;s   | **640.2ns**   | **1.553&mu;s**    | **411ns** | 3.833&mu;s    | 22.965&mu;s   | 116&mu;s  | 36&mu;s       | 88&mu;s       |
+| 2         | 10.943&mu;s   | 339.841&mu;s  | 341.544&mu;s      | **734ns** | **589ns**     | 17.61&mu;s    | 180&mu;s  | 32&mu;s       | **16&mu;s**   |
+| 3         | -             | 0ms           | 0ms               | -         | 0ms           | 0ms           | -         | 0ms           | 0ms           |
+| 4         | -             | 0ms           | 0ms               | -         | 0ms           | 0ms           | -         | 0ms           | 0ms           |
+| 5         | -             | 0ms           | 0ms               | -         | 0ms           | 0ms           | -         | 0ms           | 0ms           |
+| 6         | -             | 0ms           | 0ms               | -         | 0ms           | 0ms           | -         | 0ms           | 0ms           |
+| 7         | -             | 0ms           | 0ms               | -         | 0ms           | 0ms           | -         | 0ms           | 0ms           |
+| 8         | -             | 0ms           | 0ms               | -         | 0ms           | 0ms           | -         | 0ms           | 0ms           |
 
 </centre>
 
