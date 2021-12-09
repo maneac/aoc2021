@@ -38,6 +38,168 @@ Reminder: s = 1000ms, ms = 1000&mu;s, &mu;s = 1000ns
 
 \* Due to framework limitations, all TypeScript benchmark results are measured to the nearest &mu;s.
 
+### Relative Time Taken
+
+Percentage increase compared to the fastest for each day's part.
+
+<table>
+  <tr>
+    <th rowspan=2>Day</th>
+    <th colspan=4>Go</th>
+    <th colspan=4>Rust</th>
+    <th colspan=4>TypeScript</th>
+  </tr>
+  <tr>
+    <th>Parse</th>
+    <th>Part 1</th>
+    <th>Part 2</th>
+    <th>Total</th>
+    <th>Parse</th>
+    <th>Part 1</th>
+    <th>Part 2</th>
+    <th>Total</th>
+    <th>Parse</th>
+    <th>Part 1</th>
+    <th>Part 2</th>
+    <th>Total</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>+13%</td>
+    <td>+56%</td>
+    <td>0%</td>
+    <td><b>+4%</b></td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>+147%</td>
+    <td><b>0%</b></td>
+    <td>+405%</td>
+    <td>+8,659%</td>
+    <td>+5,566%</td>
+    <td><b>+782%</b></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>0%</td>
+    <td>+46,200%</td>
+    <td>+57,887%</td>
+    <td><b>+3,557%</b></td>
+    <td>+61%</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td><b>0%</b></td>
+    <td>+1,544%</td>
+    <td>+4,260%</td>
+    <td>+2,616%</td>
+    <td><b>+1,104%</b></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><em>+176%</em></td>
+    <td><em>+190%</em></td>
+    <td><em>0%</em></td>
+    <td><em><b>+21%</b></em></td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>+671,327%</td>
+    <td><b>0%</b></td>
+    <td>+223%</td>
+    <td>+3,451%</td>
+    <td>+433,957%</td>
+    <td><b>+246%</b></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>+1,885%</td>
+    <td>+38%</td>
+    <td>0%</td>
+    <td><b>+51%</b></td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>+49%</td>
+    <td><b>0%</b></td>
+    <td>+1,474%</td>
+    <td>+2,902%</td>
+    <td>+924%</td>
+    <td><b>+1,056%</b></td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>+1,733%</td>
+    <td>+733%</td>
+    <td>+911%</td>
+    <td><b>+839%</b></td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td><b>0%</b></td>
+    <td>+1,427%</td>
+    <td>+5,592%</td>
+    <td>+3,437%</td>
+    <td><b>+4,383%</b></td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>+54%</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td><b>+33%</b></td>
+    <td>0%</td>
+    <td>+14%</td>
+    <td>+13%</td>
+    <td><b>0%</b></td>
+    <td>+412%</td>
+    <td>+277%</td>
+    <td>+385%</td>
+    <td><b>+377%</b></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>+182%</td>
+    <td>+93%</td>
+    <td>+74%</td>
+    <td><b>+77%</b></td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td><b>0%</b></td>
+    <td>+840%</td>
+    <td>+1,778%</td>
+    <td>+260%</td>
+    <td><b>+275%</b></td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>+166%</td>
+    <td>+16%</td>
+    <td>+1,034%</td>
+    <td><b>+364%</b></td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td><b>0%</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td><b>0%</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+  </tr>
+</table>
+
 ### Go
 
 | Day   | Parse             | Part 1        | Part 2            | Total             |
