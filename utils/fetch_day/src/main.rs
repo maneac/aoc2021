@@ -1,5 +1,6 @@
 #![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
-
+#![feature(test)]
+extern crate test;
 use chrono::{Datelike, Utc};
 use clap::Parser;
 use regex::Regex;
@@ -271,11 +272,11 @@ fn add_ts_template(opts: &Opts, readme: &str, day: usize) {
   throw new Error("unimplemented");
 }
 
-function part1(_data: any): string {
+function part1(_data: any): number {
   throw new Error("unimplemented");
 }
 
-function part2(_data: any): string {
+function part2(_data: any): number {
   throw new Error("unimplemented");
 }
 
@@ -304,16 +305,19 @@ import {
 } from "https://deno.land/std@0.116.0/testing/bench.ts";
 import * as day from "./main.ts";
 
+const part1Solution = 0;
+const part2Solution = 0;
+
 Deno.test("part 1 real", () => {
   const input = day.readData();
 
-  assertEquals(day.part1(input), "");
+  assertEquals(day.part1(input), part1Solution);
 });
 
 Deno.test("part 2 real", () => {
   const input = day.readData();
 
-  assertEquals(day.part2(input), "");
+  assertEquals(day.part2(input), part2Solution);
 });
 
 bench({
@@ -333,7 +337,7 @@ bench({
   func(b: BenchmarkTimer): void {
     const input = day.readData();
     b.start();
-    assertEquals(day.part1(input), "");
+    assertEquals(day.part1(input), part1Solution);
     day.part1(input);
     b.stop();
   },
@@ -345,7 +349,7 @@ bench({
   func(b: BenchmarkTimer): void {
     const input = day.readData();
     b.start();
-    assertEquals(day.part2(input), "");
+    assertEquals(day.part2(input), part2Solution);
     b.stop();
   },
 });
@@ -385,11 +389,11 @@ func readData() []string {
     return nil
 }
 
-func part1(input []string) string {
+func part1(input []string) int {
     panic("unimplemented")
 }
 
-func part2(input []string) string {
+func part2(input []string) int {
     panic("unimplemented")
 }"#,
     )
@@ -401,14 +405,19 @@ func part2(input []string) string {
 
 import "testing"
 
+const (
+    part1Solution = 0
+    part2Solution = 0
+)
+
 func TestPart1(t *testing.T) {
 	tests := map[string]struct {
 		data     []string
-		expected string
+		expected int
 	}{
 		"actual": {
 			data:     readData(),
-			expected: "",
+			expected: part1Solution,
 		},
 	}
 
@@ -426,11 +435,11 @@ func TestPart1(t *testing.T) {
 func TestPart2(t *testing.T) {
 	tests := map[string]struct {
 		data     []string
-		expected string
+		expected int
 	}{
 		"actual": {
 			data:     readData(),
-			expected: "",
+			expected: part2Solution,
 		},
 	}
 
@@ -456,7 +465,7 @@ func BenchmarkReadData(b *testing.B) {
 func BenchmarkPart1(b *testing.B) {
 	data := readData()
 	for i := 0; i < b.N; i++ {
-		if part1(data) != "" {
+		if part1(data) != part1Solution {
 			b.FailNow()
 		}
 	}
@@ -465,7 +474,7 @@ func BenchmarkPart1(b *testing.B) {
 func BenchmarkPart2(b *testing.B) {
 	data := readData()
 	for i := 0; i < b.N; i++ {
-		if part2(data) != "" {
+		if part2(data) != part2Solution {
 			b.FailNow()
 		}
 	}
@@ -526,37 +535,35 @@ fn read_data(data_dir: &str) -> Vec<String> {
     todo!()
 }
 
-fn part_1(_input: &Vec<String>) -> String {
+fn part_1(_input: &[String]) -> usize {
     todo!()
 }
 
-fn part_2(_input: &Vec<String>) -> String {
+fn part_2(_input: &[String]) -> usize {
     todo!()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use test::Bencher;
+
+    const PART_1: usize = 0;
+    const PART_2: usize = 0;
 
     #[test]
     fn test_part_1_real() {
         let data = read_data("../../data");
 
-        assert_eq!("", part_1(&data));
+        assert_eq!(PART_1, part_1(&data));
     }
 
     #[test]
     fn test_part_2_real() {
         let data = read_data("../../data");
 
-        assert_eq!("", part_2(&data));
+        assert_eq!(PART_2, part_2(&data));
     }
-}
-
-#[cfg(test)]
-mod benchmarks {
-    use super::*;
-    use test::Bencher;
 
     #[bench]
     fn bench_read_data(b: &mut Bencher) {
@@ -572,7 +579,7 @@ mod benchmarks {
         let data = read_data("../../data");
 
         b.iter(|| {
-            assert_eq!("", part_1(&data));
+            assert_eq!(PART_1, part_1(&data));
         })
     }
 
@@ -581,7 +588,7 @@ mod benchmarks {
         let data = read_data("../../data");
 
         b.iter(|| {
-            assert_eq!("", part_2(&data));
+            assert_eq!(PART_2, part_2(&data));
         })
     }
 }
