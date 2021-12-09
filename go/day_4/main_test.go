@@ -5,6 +5,11 @@ import (
 	"testing"
 )
 
+const (
+	part1Solution = 8580
+	part2Solution = 9576
+)
+
 func TestPart1(t *testing.T) {
 	tests := map[string]struct {
 		data     *input
@@ -16,7 +21,7 @@ func TestPart1(t *testing.T) {
 		},
 		"actual": {
 			data:     readData(),
-			expected: 8580,
+			expected: part1Solution,
 		},
 	}
 
@@ -42,7 +47,7 @@ func TestPart2(t *testing.T) {
 		},
 		"actual": {
 			data:     readData(),
-			expected: 9576,
+			expected: part2Solution,
 		},
 	}
 
@@ -108,5 +113,35 @@ func exampleData() *input {
 			{3, 15, 0, 2, 22, 9, 18, 13, 17, 5, 19, 8, 7, 25, 23, 20, 11, 10, 24, 4, 14, 21, 16, 12, 6},
 			{14, 21, 17, 24, 4, 10, 16, 15, 9, 19, 18, 8, 23, 26, 20, 22, 11, 13, 6, 5, 2, 0, 12, 3, 7},
 		},
+	}
+}
+
+func BenchmarkReadData(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		if readData() == nil {
+			b.FailNow()
+		}
+	}
+}
+
+func BenchmarkPart1(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		b.StopTimer()
+		data := readData()
+		b.StartTimer()
+		if part1(data) != part1Solution {
+			b.FailNow()
+		}
+	}
+}
+
+func BenchmarkPart2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		b.StopTimer()
+		data := readData()
+		b.StartTimer()
+		if part2(data) != part2Solution {
+			b.FailNow()
+		}
 	}
 }

@@ -1,5 +1,6 @@
 #![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
-
+#![feature(test)]
+extern crate test;
 use std::{fs::read_to_string, path::Path};
 
 fn main() {
@@ -105,19 +106,23 @@ fn board_from_str(input: &str) -> Board {
 mod tests {
     use super::*;
     use std::fs::write;
+    use test::Bencher;
+
+    const PART_1: usize = 8580;
+    const PART_2: usize = 9576;
 
     #[test]
     fn test_part_1_real() {
         let data = read_data("../../data");
 
-        assert_eq!(8580, part_1(&data));
+        assert_eq!(PART_1, part_1(&data));
     }
 
     #[test]
     fn test_part_2_real() {
         let data = read_data("../../data");
 
-        assert_eq!(9576, part_2(&data));
+        assert_eq!(PART_2, part_2(&data));
     }
 
     #[test]
@@ -253,5 +258,38 @@ mod tests {
                 ],
             ],
         }
+    }
+
+    #[bench]
+    fn bench_read_data(b: &mut Bencher) {
+        b.iter(|| {
+            let data = read_data("../../data");
+
+            assert_ne!(
+                data,
+                Input {
+                    numbers: Vec::new(),
+                    boards: Vec::new(),
+                }
+            );
+        })
+    }
+
+    #[bench]
+    fn bench_part_1(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!(PART_1, part_1(&data));
+        })
+    }
+
+    #[bench]
+    fn bench_part_2(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!(PART_2, part_2(&data));
+        })
     }
 }
