@@ -17,3 +17,12 @@ cargo run --release --package day_<day num>
 # From this repository's root
 cargo test --release --package day_<day num>
 ```
+
+## Benchmarking
+
+As of Rust 1.59.0, this requires the use of the `nightly` toolchain.
+
+```bash
+# From this repository's root
+cargo bench --package day_<day num>
+```
