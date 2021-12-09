@@ -1,5 +1,6 @@
 #![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
-
+#![feature(test)]
+extern crate test;
 use std::{fs::read_to_string, path::Path, str::FromStr};
 
 fn main() {
@@ -163,22 +164,25 @@ impl Display {
 
 #[cfg(test)]
 mod tests {
-    use std::fs::write;
-
     use super::*;
+    use std::fs::{create_dir, write};
+    use test::Bencher;
+
+    const PART_1: usize = 284;
+    const PART_2: usize = 973499;
 
     #[test]
     fn test_part_1_real() {
         let data = read_data("../../data");
 
-        assert_eq!(284, part_1(&data));
+        assert_eq!(PART_1, part_1(&data));
     }
 
     #[test]
     fn test_part_2_real() {
         let data = read_data("../../data");
 
-        assert_eq!(973499, part_2(&data));
+        assert_eq!(PART_2, part_2(&data));
     }
 
     #[test]
@@ -186,9 +190,13 @@ mod tests {
         let input =
             "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf";
 
-        write(Path::new("/tmp").join("day_8.txt"), input).unwrap();
+        let tmp_path = Path::new("/tmp/example1");
+        if !tmp_path.exists() {
+            create_dir(tmp_path).unwrap();
+        }
+        write(tmp_path.join("day_8.txt"), input).unwrap();
 
-        assert_eq!(example_1_data(), read_data("/tmp"));
+        assert_eq!(example_1_data(), read_data(tmp_path.to_str().unwrap()));
     }
 
     #[test]
@@ -206,9 +214,13 @@ egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
 gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 ";
 
-        write(Path::new("/tmp").join("day_8.txt"), input).unwrap();
+        let tmp_path = Path::new("/tmp/example2");
+        if !tmp_path.exists() {
+            create_dir(tmp_path).unwrap();
+        }
+        write(tmp_path.join("day_8.txt"), input).unwrap();
 
-        assert_eq!(example_2_data(), read_data("/tmp"));
+        assert_eq!(example_2_data(), read_data(tmp_path.to_str().unwrap()));
     }
 
     #[test]
@@ -469,5 +481,32 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
                 ],
             },
         ]
+    }
+
+    #[bench]
+    fn bench_read_data(b: &mut Bencher) {
+        b.iter(|| {
+            let data = read_data("../../data");
+
+            assert_ne!(data, Vec::new());
+        })
+    }
+
+    #[bench]
+    fn bench_part_1(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!(PART_1, part_1(&data));
+        })
+    }
+
+    #[bench]
+    fn bench_part_2(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!(PART_2, part_2(&data));
+        })
     }
 }
