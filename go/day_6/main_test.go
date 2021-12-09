@@ -5,6 +5,11 @@ import (
 	"testing"
 )
 
+const (
+	part1Solution = 360761
+	part2Solution = 1632779838045
+)
+
 func TestPart1(t *testing.T) {
 	tests := map[string]struct {
 		data     [9]int
@@ -16,7 +21,7 @@ func TestPart1(t *testing.T) {
 		},
 		"actual": {
 			data:     readData(),
-			expected: 360761,
+			expected: part1Solution,
 		},
 	}
 
@@ -42,7 +47,7 @@ func TestPart2(t *testing.T) {
 		},
 		"actual": {
 			data:     readData(),
-			expected: 1632779838045,
+			expected: part2Solution,
 		},
 	}
 
@@ -110,5 +115,31 @@ func TestFishAfterDays(t *testing.T) {
 				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
 			}
 		})
+	}
+}
+
+func BenchmarkReadData(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		if readData() == [9]int{} {
+			b.FailNow()
+		}
+	}
+}
+
+func BenchmarkPart1(b *testing.B) {
+	data := readData()
+	for i := 0; i < b.N; i++ {
+		if part1(data) != part1Solution {
+			b.FailNow()
+		}
+	}
+}
+
+func BenchmarkPart2(b *testing.B) {
+	data := readData()
+	for i := 0; i < b.N; i++ {
+		if part2(data) != part2Solution {
+			b.FailNow()
+		}
 	}
 }
