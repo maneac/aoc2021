@@ -1,5 +1,6 @@
 #![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
-
+#![feature(test)]
+extern crate test;
 use std::{fs::read_to_string, path::Path};
 
 fn main() {
@@ -122,22 +123,25 @@ fn part_2(input: &Input) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use std::fs::write;
-
     use super::*;
+    use std::fs::write;
+    use test::Bencher;
+
+    const PART_1: usize = 5608;
+    const PART_2: usize = 20299;
 
     #[test]
     fn test_part_1_real() {
         let data = read_data("../../data");
 
-        assert_eq!(5608, part_1(&data));
+        assert_eq!(PART_1, part_1(&data));
     }
 
     #[test]
     fn test_part_2_real() {
         let data = read_data("../../data");
 
-        assert_eq!(20299, part_2(&data));
+        assert_eq!(PART_2, part_2(&data));
     }
 
     #[test]
@@ -214,5 +218,38 @@ mod tests {
         };
 
         assert_eq!(12, part_2(&data));
+    }
+
+    #[bench]
+    fn bench_read_data(b: &mut Bencher) {
+        b.iter(|| {
+            let data = read_data("../../data");
+
+            assert_ne!(
+                data,
+                Input {
+                    vectors: Vec::new(),
+                    max: (0, 0),
+                }
+            );
+        })
+    }
+
+    #[bench]
+    fn bench_part_1(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!(PART_1, part_1(&data));
+        })
+    }
+
+    #[bench]
+    fn bench_part_2(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!(PART_2, part_2(&data));
+        })
     }
 }
