@@ -1,16 +1,27 @@
-import { assertEquals } from "https://deno.land/std@0.116.0/testing/asserts.ts";
+import {
+  assertEquals,
+  assertNotEquals,
+} from "https://deno.land/std@0.116.0/testing/asserts.ts";
+import {
+  bench,
+  BenchmarkTimer,
+  runBenchmarks,
+} from "https://deno.land/std@0.116.0/testing/bench.ts";
 import * as day from "./main.ts";
+
+const part1Solution = 360761;
+const part2Solution = 1632779838045;
 
 Deno.test("part 1 real", () => {
   const input = day.readData();
 
-  assertEquals(day.part1(input), 360761);
+  assertEquals(day.part1(input), part1Solution);
 });
 
 Deno.test("part 2 real", () => {
   const input = day.readData();
 
-  assertEquals(day.part2(input), 1632779838045);
+  assertEquals(day.part2(input), part2Solution);
 });
 
 Deno.test("parse contents", () => {
@@ -30,3 +41,39 @@ Deno.test("part 2 example", () => {
 
   assertEquals(day.part2(input), 26984457539);
 });
+
+bench({
+  name: "read data",
+  runs: 5000,
+  func(b: BenchmarkTimer): void {
+    b.start();
+    const input = day.readData();
+    assertNotEquals(input, []);
+    b.stop();
+  },
+});
+
+bench({
+  name: "part 1",
+  runs: 5000,
+  func(b: BenchmarkTimer): void {
+    const input = day.readData();
+    b.start();
+    assertEquals(day.part1(input), part1Solution);
+    day.part1(input);
+    b.stop();
+  },
+});
+
+bench({
+  name: "part 2",
+  runs: 5000,
+  func(b: BenchmarkTimer): void {
+    const input = day.readData();
+    b.start();
+    assertEquals(day.part2(input), part2Solution);
+    b.stop();
+  },
+});
+
+runBenchmarks();
