@@ -293,7 +293,15 @@ export { main, part1, part2, readData };
 
     write(
         lang_instruction_dir.join("main.test.ts"),
-        r#"import { assertEquals } from "https://deno.land/std@0.116.0/testing/asserts.ts";
+        r#"import {
+  assertEquals,
+  assertNotEquals,
+} from "https://deno.land/std@0.116.0/testing/asserts.ts";
+import {
+  bench,
+ BenchmarkTimer,
+ runBenchmarks,
+} from "https://deno.land/std@0.116.0/testing/bench.ts";
 import * as day from "./main.ts";
 
 Deno.test("part 1 real", () => {
@@ -307,6 +315,42 @@ Deno.test("part 2 real", () => {
 
   assertEquals(day.part2(input), "");
 });
+
+bench({
+  name: "read data",
+  runs: 500,
+  func(b: BenchmarkTimer): void {
+    b.start();
+    const input = day.readData();
+    assertNotEquals(input, []);
+    b.stop();
+  },
+});
+
+bench({
+  name: "part 1",
+  runs: 500,
+  func(b: BenchmarkTimer): void {
+    const input = day.readData();
+    b.start();
+    assertEquals(day.part1(input), "");
+    day.part1(input);
+    b.stop();
+  },
+});
+
+bench({
+  name: "part 2",
+  runs: 500,
+  func(b: BenchmarkTimer): void {
+    const input = day.readData();
+    b.start();
+    assertEquals(day.part2(input), "");
+    b.stop();
+  },
+});
+
+runBenchmarks();  
 "#,
     )
     .unwrap();
@@ -399,7 +443,34 @@ func TestPart2(t *testing.T) {
 			}
 		})
 	}
-}"#,
+}
+
+func BenchmarkReadData(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		if readData() == nil {
+			b.FailNow()
+		}
+	}
+}
+
+func BenchmarkPart1(b *testing.B) {
+	data := readData()
+	for i := 0; i < b.N; i++ {
+		if part1(data) != "" {
+			b.FailNow()
+		}
+	}
+}
+
+func BenchmarkPart2(b *testing.B) {
+	data := readData()
+	for i := 0; i < b.N; i++ {
+		if part2(data) != "" {
+			b.FailNow()
+		}
+	}
+}
+"#,
     )
     .unwrap();
 }
@@ -439,6 +510,8 @@ edition = "2021"
     write(
         src_dir.join("main.rs"),
         r#"#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![feature(test)]
+extern crate test;
 
 use std::{fs::read_to_string, path::Path};
         
@@ -477,6 +550,39 @@ mod tests {
         let data = read_data("../../data");
 
         assert_eq!("", part_2(&data));
+    }
+}
+
+#[cfg(test)]
+mod benchmarks {
+    use super::*;
+    use test::Bencher;
+
+    #[bench]
+    fn bench_read_data(b: &mut Bencher) {
+        b.iter(|| {
+            let data = read_data("../../data");
+
+            assert_ne!(data, Vec::new());
+        })
+    }
+
+    #[bench]
+    fn bench_part_1(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!("", part_1(&data));
+        })
+    }
+
+    #[bench]
+    fn bench_part_2(b: &mut Bencher) {
+        let data = read_data("../../data");
+
+        b.iter(|| {
+            assert_eq!("", part_2(&data));
+        })
     }
 }
 "#,
