@@ -33,14 +33,14 @@ The commands used and specifics of each benchmark can be found in each langauge'
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:--:|
 | **Day** | **Go** ||| **Rust** ||| **TypeScript (Deno)\*** |||
 | ^ | **Parse** | **Part 1** | **Part 2** | **Parse** | **Part 1** | **Part 2** | **Parse** | **Part 1** | **Part 2** |
-| 1 | - | 0ms | 0ms | - | 0ms| 0ms| - | 0ms| 0ms |
-| 2 | - | 0ms | 0ms | - | 0ms| 0ms| - | 0ms| 0ms |
-| 3 | - | 0ms | 0ms | - | 0ms| 0ms| - | 0ms| 0ms |
-| 4 | - | 0ms | 0ms | - | 0ms| 0ms| - | 0ms| 0ms |
-| 5 | - | 0ms | 0ms | - | 0ms| 0ms| - | 0ms| 0ms |
-| 6 | - | 0ms | 0ms | - | 0ms| 0ms| - | 0ms| 0ms |
-| 7 | - | 0ms | 0ms | - | 0ms| 0ms| - | 0ms| 0ms |
-| 8 | - | 0ms | 0ms | - | 0ms| 0ms| - | 0ms| 0ms |
+| 1 | 26.021&mu;s | **640.2ns** | **1.553&mu;s** | **411ns** | 3.833&mu;s | 22.965&mu;s | 116&mu;s | 36&mu;s | 88&mu;s |
+| 2 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
+| 3 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
+| 4 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
+| 5 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
+| 6 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
+| 7 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
+| 8 | - | 0ms | 0ms | - | 0ms | 0ms | - | 0ms | 0ms |
 
 </centre>
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -33,17 +32,17 @@ func readData() []int {
 	return out
 }
 
-func part1(input []int) string {
+func part1(input []int) int {
 	count := 0
 	for idx, val := range input[1:] {
 		if val > input[idx] {
 			count++
 		}
 	}
-	return fmt.Sprint(count)
+	return count
 }
 
-func part2(input []int) string {
+func part2(input []int) int {
 	count := 0
 	for idx := range input[3:] {
 		lastVal := input[idx] + input[idx+1] + input[idx+2]
@@ -52,5 +51,5 @@ func part2(input []int) string {
 			count++
 		}
 	}
-	return fmt.Sprint(count)
+	return count
 }
