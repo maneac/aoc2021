@@ -23,12 +23,12 @@ fn read_data(data_dir: &str) -> Input {
             l.split_once(" -> ")
                 .map(|(from_str, to_str)| {
                     let from = from_str
-                        .split_once(",")
+                        .split_once(',')
                         .map(|(x, y)| (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap()))
                         .unwrap();
 
                     let to = to_str
-                        .split_once(",")
+                        .split_once(',')
                         .map(|(x, y)| (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap()))
                         .unwrap();
 
