@@ -70,4 +70,6 @@ bench({
   },
 });
 
-runBenchmarks();
+if (Deno.args.length > 0 && Deno.args[0] == "--bench") {
+  runBenchmarks();
+}

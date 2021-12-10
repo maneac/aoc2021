@@ -22,5 +22,5 @@ deno test --allow-read ./ts/day_<day_num>
 
 ```bash
 # From this repository's root
-deno test --allow-read ./ts/day_<day_num> --filter "bench"
+deno test --allow-read ./ts/day_<day_num> -- --bench
 ```
