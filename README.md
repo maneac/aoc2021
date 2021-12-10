@@ -178,10 +178,10 @@ Percentage increase compared to the fastest for each day's part.
     <td>0%</td>
     <td>0%</td>
     <td><b>0%</b></td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td><b>-</b></td>
+    <td>+464%</td>
+    <td>+2,935</td>
+    <td>+6,624%</td>
+    <td><b>+1,922</b></td>
   </tr>
   <tr>
     <td>9</td>
@@ -256,7 +256,7 @@ Percentage increase compared to the fastest for each day's part.
 | 5     | 348&mu;s  | 72.576ms  | 54.76ms   | 127.684ms |
 | 6     | 16&mu;s   | 1.2&mu;s  | 4.8&mu;s  | 22&mu;s   |
 | 7     | 172&mu;s  | 4&mu;s    | 2.524ms   | 2.7ms     |
-| 8     | -         | -         | -         | -         |
+| 8     | 192&mu;s  | 20&mu;s   | 700&mu;s  | 912&mu;s  |
 | 9     | -         | -         | -         | -         |
 | 10    | 12&mu;s   | 392&mu;s  | 224&mu;s  | 628&mu;s  |
 
