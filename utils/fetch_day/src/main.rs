@@ -280,7 +280,7 @@ function part2(_data: any): number {
 
 function main() {
   const data = readData();
-  
+
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
@@ -298,8 +298,8 @@ export { main, part1, part2, readData };
 } from "https://deno.land/std@0.116.0/testing/asserts.ts";
 import {
   bench,
- BenchmarkTimer,
- runBenchmarks,
+  BenchmarkTimer,
+  runBenchmarks,
 } from "https://deno.land/std@0.116.0/testing/bench.ts";
 import * as day from "./main.ts";
 
@@ -352,7 +352,9 @@ bench({
   },
 });
 
-runBenchmarks();  
+if (Deno.args.length > 0 && Deno.args[0] == "--bench") {
+  runBenchmarks();
+}
 "#,
     )
     .unwrap();
@@ -382,7 +384,7 @@ func main() {
     log.Println("Part 1: ", part1(data))
     log.Println("Part 2: ", part2(data))
 }
-        
+
 func readData() []string {
     return nil
 }
