@@ -185,8 +185,8 @@ Percentage increase compared to the fastest for each day's part.
   </tr>
   <tr>
     <td>9</td>
-    <td>+2168%</td>
-    <td>+9520%</td>
+    <td>+2,168%</td>
+    <td>+9,520%</td>
     <td>+404%</td>
     <td><b>+487%</b></td>
     <td>0%</td>
@@ -204,14 +204,14 @@ Percentage increase compared to the fastest for each day's part.
     <td>-</td>
     <td>-</td>
     <td><b>-</b></td>
-    <td>0%</td>
+    <td>+331%</td>
     <td>0%</td>
     <td>0%</td>
     <td><b>0%</b></td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td><b>-</b></td>
+    <td>0%</td>
+    <td>+1,556%</td>
+    <td>+384%</td>
+    <td><b>+416%</b></td>
   </tr>
 </table>
 
@@ -243,22 +243,22 @@ Percentage increase compared to the fastest for each day's part.
 | 7     | **18.305&mu;s**   | **213ns**         | **700.813&mu;s**  | **719.331&mu;s**  |
 | 8     | **34.029&mu;s**   | **659ns**         | **10.41&mu;s**    | **45.098&mu;s**   |
 | 9     | **13.753&mu;s**   | **7.37&mu;s**     | 1.078ms           | **1.099ms**       |
-| 10    | **51.669&mu;s**   | **23.672&mu;s**   | **46.297&mu;s**   | **121.638&mu;s**  |
+| 10    | 51.669&mu;s       | **23.672&mu;s**   | **46.297&mu;s**   | **121.638&mu;s**  |
 
 ### TypeScript (Deno)
 
-| Day   | Parse     | Part 1    | Part 2    | Total     |
-|:-----:|:---------:|:---------:|:---------:|:---------:|
-| 1     | 116&mu;s  | 36&mu;s   | 88&mu;s   | 240&mu;s  |
-| 2     | 180&mu;s  | 32&mu;s   | 16&mu;s   | 228&mu;s  |
-| 3     | 224&mu;s  | 216&mu;s  | 52&mu;s   | 492&mu;s  |
-| 4     | 320&mu;s  | 3.132ms   | 2.936ms   | 6.388ms   |
-| 5     | 348&mu;s  | 72.576ms  | 54.76ms   | 127.684ms |
-| 6     | 16&mu;s   | 1.2&mu;s  | 4.8&mu;s  | 22&mu;s   |
-| 7     | 172&mu;s  | 4&mu;s    | 2.524ms   | 2.7ms     |
-| 8     | -         | -         | -         | -         |
-| 9     | -         | -         | -         | -         |
-| 10    | -         | -         | -         | -         |
+| Day   | Parse       | Part 1    | Part 2    | Total     |
+|:-----:|:-----------:|:---------:|:---------:|:---------:|
+| 1     | 116&mu;s    | 36&mu;s   | 88&mu;s   | 240&mu;s  |
+| 2     | 180&mu;s    | 32&mu;s   | 16&mu;s   | 228&mu;s  |
+| 3     | 224&mu;s    | 216&mu;s  | 52&mu;s   | 492&mu;s  |
+| 4     | 320&mu;s    | 3.132ms   | 2.936ms   | 6.388ms   |
+| 5     | 348&mu;s    | 72.576ms  | 54.76ms   | 127.684ms |
+| 6     | 16&mu;s     | 1.2&mu;s  | 4.8&mu;s  | 22&mu;s   |
+| 7     | 172&mu;s    | 4&mu;s    | 2.524ms   | 2.7ms     |
+| 8     | -           | -         | -         | -         |
+| 9     | -           | -         | -         | -         |
+| 10    | **12&mu;s** | 392&mu;s  | 224&mu;s  | 628&mu;s  |
 
 ### System Information
 
