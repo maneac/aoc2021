@@ -160,7 +160,7 @@ fn find_minima(input: &[Vec<u8>]) -> Vec<(usize, usize)> {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_9 {
     use std::fs::write;
 
     use super::*;

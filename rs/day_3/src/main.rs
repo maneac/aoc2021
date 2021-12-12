@@ -132,7 +132,7 @@ fn part_2(input: &[Vec<bool>]) -> usize {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_3 {
     use super::*;
     use std::fs::write;
     use test::Bencher;

@@ -151,7 +151,7 @@ fn fix_line(line: &mut Iter<Char>, prev: Option<Bracket>) -> Result<Vec<Bracket>
 }
 
 #[cfg(test)]
-mod tests {
+mod day_10 {
     use super::*;
     use std::fs::write;
     use test::Bencher;

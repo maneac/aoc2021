@@ -103,7 +103,7 @@ fn board_from_str(input: &str) -> Board {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_4 {
     use super::*;
     use std::fs::write;
     use test::Bencher;

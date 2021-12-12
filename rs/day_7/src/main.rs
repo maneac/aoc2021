@@ -38,7 +38,7 @@ fn part_2(input: &[usize]) -> usize {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_7 {
     use super::*;
     use test::Bencher;
 

@@ -163,7 +163,7 @@ impl Display {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_8 {
     use super::*;
     use std::fs::{create_dir, write};
     use test::Bencher;
