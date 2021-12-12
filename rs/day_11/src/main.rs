@@ -155,10 +155,9 @@ impl Display for Input {
 }
 
 #[cfg(test)]
-mod tests {
-    use std::fs::write;
-
+mod day_11 {
     use super::*;
+    use std::fs::write;
     use test::Bencher;
 
     const PART_1: usize = 1681;

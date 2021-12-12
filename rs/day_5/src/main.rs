@@ -122,7 +122,7 @@ fn part_2(input: &Input) -> usize {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_5 {
     use super::*;
     use std::fs::write;
     use test::Bencher;

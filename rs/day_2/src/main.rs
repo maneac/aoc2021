@@ -76,7 +76,7 @@ fn part_2(input: &[Instruction]) -> usize {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_2 {
     use super::*;
     use test::Bencher;
 

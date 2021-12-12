@@ -41,7 +41,7 @@ fn fish_after_days(input: &[usize; 9], days: usize) -> usize {
 }
 
 #[cfg(test)]
-mod tests {
+mod day_6 {
     use super::*;
     use std::fs::write;
     use test::Bencher;
