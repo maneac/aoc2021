@@ -266,27 +266,31 @@ fn add_ts_template(opts: &Opts, readme: &str, day: usize) {
 
     write(
         lang_instruction_dir.join("main.ts"),
-        r#"function readData(): any {
+        format!(
+            r#"function readData(): any {{
+  const _ = Deno.readTextFileSync("./data/day_{}.txt").trim();
   throw new Error("unimplemented");
-}
+}}
 
-function part1(_data: any): number {
+function part1(_data: any): number {{
   throw new Error("unimplemented");
-}
+}}
 
-function part2(_data: any): number {
+function part2(_data: any): number {{
   throw new Error("unimplemented");
-}
+}}
 
-function main() {
+function main() {{
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
-}
+}}
 
-export { main, part1, part2, readData };
+export {{ main, part1, part2, readData }};
 "#,
+            day
+        ),
     )
     .unwrap();
 
@@ -374,28 +378,43 @@ fn add_go_template(opts: &Opts, readme: &str, day: usize) {
 
     write(
         lang_instruction_dir.join("main.go"),
-        r#"package main
+        format!(
+            r#"package main
 
-import "log"
+import (
+    "log"
+    "os"
+)
 
-func main() {
+type input []string
+
+func main() {{
     data := readData()
 
     log.Println("Part 1: ", part1(data))
     log.Println("Part 2: ", part2(data))
-}
+}}
 
-func readData() []string {
-    return nil
-}
+func readData() input {{
+    _, err := os.ReadFile("../../data/day_{}.txt")
+    if err != nil {{
+        panic(err)
+    }}
 
-func part1(input []string) int {
+
     panic("unimplemented")
-}
+}}
 
-func part2(input []string) int {
+func part1(input input) int {{
     panic("unimplemented")
-}"#,
+}}
+
+func part2(input input) int {{
+    panic("unimplemented")
+}}
+"#,
+            day
+        ),
     )
     .unwrap();
 
@@ -412,7 +431,7 @@ const (
 
 func TestPart1(t *testing.T) {
 	tests := map[string]struct {
-		data     []string
+		data     input
 		expected int
 	}{
 		"actual": {
@@ -434,7 +453,7 @@ func TestPart1(t *testing.T) {
 
 func TestPart2(t *testing.T) {
 	tests := map[string]struct {
-		data     []string
+		data     input
 		expected int
 	}{
 		"actual": {
@@ -518,33 +537,37 @@ edition = "2021"
 
     write(
         src_dir.join("main.rs"),
-        r#"#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+        format!(
+            r#"#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
 #![feature(test)]
 extern crate test;
 
-use std::{fs::read_to_string, path::Path};
+use std::{{fs::read_to_string, path::Path}};
         
-fn main() {
+fn main() {{
     let data = read_data("./data");
 
-    println!("Part 1: {}", part_1(&data));
-    println!("Part 2: {}", part_2(&data));
-}
+    println!("Part 1: {{}}", part_1(&data));
+    println!("Part 2: {{}}", part_2(&data));
+}}
 
-fn read_data(data_dir: &str) -> Vec<String> {
+fn read_data(data_dir: &str) -> Input {{
+    let _ = read_to_string(Path::new(data_dir).join("day_{0}.txt")).unwrap();
     todo!()
-}
+}}
 
-fn part_1(_input: &[String]) -> usize {
+fn part_1(_input: &Input) -> usize {{
     todo!()
-}
+}}
 
-fn part_2(_input: &[String]) -> usize {
+fn part_2(_input: &Input) -> usize {{
     todo!()
-}
+}}
+
+type Input = Vec<String>;
 
 #[cfg(test)]
-mod tests {
+mod day_{0} {{
     use super::*;
     use test::Bencher;
 
@@ -552,47 +575,49 @@ mod tests {
     const PART_2: usize = 0;
 
     #[test]
-    fn test_part_1_real() {
+    fn test_part_1_real() {{
         let data = read_data("../../data");
 
         assert_eq!(PART_1, part_1(&data));
-    }
+    }}
 
     #[test]
-    fn test_part_2_real() {
+    fn test_part_2_real() {{
         let data = read_data("../../data");
 
         assert_eq!(PART_2, part_2(&data));
-    }
+    }}
 
     #[bench]
-    fn bench_read_data(b: &mut Bencher) {
-        b.iter(|| {
+    fn bench_read_data(b: &mut Bencher) {{
+        b.iter(|| {{
             let data = read_data("../../data");
 
-            assert_ne!(data, Vec::new());
-        })
-    }
+            assert_ne!(data, Input::new());
+        }})
+    }}
 
     #[bench]
-    fn bench_part_1(b: &mut Bencher) {
+    fn bench_part_1(b: &mut Bencher) {{
         let data = read_data("../../data");
 
-        b.iter(|| {
+        b.iter(|| {{
             assert_eq!(PART_1, part_1(&data));
-        })
-    }
+        }})
+    }}
 
     #[bench]
-    fn bench_part_2(b: &mut Bencher) {
+    fn bench_part_2(b: &mut Bencher) {{
         let data = read_data("../../data");
 
-        b.iter(|| {
+        b.iter(|| {{
             assert_eq!(PART_2, part_2(&data));
-        })
-    }
-}
+        }})
+    }}
+}}
 "#,
+            day
+        ),
     )
     .unwrap();
 
