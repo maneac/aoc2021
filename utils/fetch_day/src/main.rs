@@ -324,7 +324,7 @@ Deno.test("part 2 real", () => {
 
 bench({
   name: "read data",
-  runs: 500,
+  runs: 5000,
   func(b: BenchmarkTimer): void {
     b.start();
     const input = day.readData();
@@ -335,7 +335,7 @@ bench({
 
 bench({
   name: "part 1",
-  runs: 500,
+  runs: 5000,
   func(b: BenchmarkTimer): void {
     const input = day.readData();
     b.start();
@@ -347,7 +347,7 @@ bench({
 
 bench({
   name: "part 2",
-  runs: 500,
+  runs: 5000,
   func(b: BenchmarkTimer): void {
     const input = day.readData();
     b.start();
