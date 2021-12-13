@@ -245,10 +245,10 @@ Percentage increase compared to the fastest for each day's part.
   </tr>
   <tr>
     <td>13</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
-    <td><b>-</b></td>
+    <td>+1,260%</td>
+    <td>+319%</td>
+    <td>+285%</td>
+    <td><b>+594%</b></td>
     <td>0%</td>
     <td>0%</td>
     <td>0%</td>
@@ -276,7 +276,7 @@ Percentage increase compared to the fastest for each day's part.
 | 10    | **4.542&mu;s**    | 130.018&mu;s      | 133.546&mu;s      | 268.106&mu;s      |
 | 11    | 14.943&mu;s       | 131.827&mu;s      | 366.356&mu;s      | 513.126&mu;s      |
 | 12    | -                 | -                 | -                 | -                 |
-| 13    | -                 | -                 | -                 | -                 |
+| 13    | 403.033&mu;s      | 33.423&mu;s       | 218.328&mu;s      | 654.784&mu;s      |
 
 ### Rust
 
