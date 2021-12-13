@@ -53,13 +53,13 @@ fn main() {
                     acc[2][idx] = from_dur(&ts, ts == min);
 
                     if idx == 3 {
-                        diffs[0][idx] = format!("<td><b>{}</b></td>", percent_diff(go, min));
-                        diffs[1][idx] = format!("<td><b>{}</b></td>", percent_diff(rs, min));
-                        diffs[2][idx] = format!("<td><b>{}</b></td>", percent_diff(ts, min));
+                        diffs[0][idx] = format!("    <td><b>{}</b></td>", percent_diff(go, min));
+                        diffs[1][idx] = format!("    <td><b>{}</b></td>", percent_diff(rs, min));
+                        diffs[2][idx] = format!("    <td><b>{}</b></td>", percent_diff(ts, min));
                     } else {
-                        diffs[0][idx] = format!("<td>{}</td>", percent_diff(go, min));
-                        diffs[1][idx] = format!("<td>{}</td>", percent_diff(rs, min));
-                        diffs[2][idx] = format!("<td>{}</td>", percent_diff(ts, min));
+                        diffs[0][idx] = format!("    <td>{}</td>", percent_diff(go, min));
+                        diffs[1][idx] = format!("    <td>{}</td>", percent_diff(rs, min));
+                        diffs[2][idx] = format!("    <td>{}</td>", percent_diff(ts, min));
                     }
 
                     acc
@@ -74,11 +74,11 @@ fn main() {
             deno_table.push('\n');
 
             diff_table.push_str(&format!(
-                "<tr>\n<td>{}</td>\n{}</tr>",
+                "  <tr>\n    <td>{}</td>\n{}  </tr>",
                 day,
                 diffs.iter().flatten().fold(String::new(), |mut acc, diff| {
                     acc.push_str(&diff);
-                    acc.push('\n');
+                    acc.push_str("\n");
                     acc
                 })
             ));
