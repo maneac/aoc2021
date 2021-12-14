@@ -100,9 +100,9 @@ fn from_dur(dur: &Duration, lowest: bool) -> String {
         return "-".to_owned();
     }
     let d = if lowest {
-        format!("**{:#?}**", dur)
+        format!("**{:#.3?}**", dur)
     } else {
-        format!("{:#?}", dur)
+        format!("{:#.3?}", dur)
     };
     d.replace("µ", "&mu;")
 }
