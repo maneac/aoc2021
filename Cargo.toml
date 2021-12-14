@@ -2,4 +2,4 @@
 
 default-members = ["utils/fetch_day"]
 
-members = ["utils/fetch_day", "utils/benchmarks", "rs/day_1", "rs/day_2", "rs/day_3", "rs/day_4", "rs/day_5", "rs/day_6", "rs/day_7", "rs/day_8", "rs/day_9", "rs/day_10", "rs/day_11", "rs/day_12", "rs/day_13"]
+members = ["utils/fetch_day", "utils/benchmarks", "rs/day_1", "rs/day_2", "rs/day_3", "rs/day_4", "rs/day_5", "rs/day_6", "rs/day_7", "rs/day_8", "rs/day_9", "rs/day_10", "rs/day_11", "rs/day_12", "rs/day_13", "rs/day_14"]
