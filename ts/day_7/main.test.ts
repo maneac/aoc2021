@@ -1,12 +1,12 @@
 import {
   assertEquals,
   assertNotEquals,
-} from "https://deno.land/std@0.116.0/testing/asserts.ts";
+} from "https://deno.land/std@0.117.0/testing/asserts.ts";
 import {
   bench,
   BenchmarkTimer,
   runBenchmarks,
-} from "https://deno.land/std@0.116.0/testing/bench.ts";
+} from "https://deno.land/std@0.117.0/testing/bench.ts";
 import * as day from "./main.ts";
 
 const part1Solution = 340056;
