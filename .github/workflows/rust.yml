@@ -47,8 +47,9 @@ jobs:
       - name: Cargo Tarpaulin
         uses: actions-rs/tarpaulin@v0.1
         with:
-          version: '0.15.0'
-          args: "--packages \"day_*\" -- --test-threads 1"
+          args: "--packages \"day_*\""
+          run-types: "Tests"
+          timeout: 120
         
       - name: Replace NaNs
         run: |

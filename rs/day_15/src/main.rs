@@ -30,7 +30,7 @@ fn part_1(input: &Input) -> usize {
     let valid_y = 0..input.len();
     let end = ((input.len() - 1) << 9) | (input[0].len() - 1);
 
-    let mut risks = vec![usize::MAX; 1 << 18];
+    let mut risks = [usize::MAX; 1 << 18];
     risks[0] = 0;
 
     let mut to_process = Vec::with_capacity(risks.len());
