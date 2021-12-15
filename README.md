@@ -273,6 +273,21 @@ Percentage increase compared to the fastest for each day's part.
     <td>-</td>
     <td><b>-</b></td>
   </tr>
+  <tr>
+    <td>15</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td><b>0%</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+  </tr>
 </table>
 
 ### Go
@@ -293,6 +308,7 @@ Percentage increase compared to the fastest for each day's part.
 | 12    | -                 | -                 | -                 | -                 |
 | 13    | 403.033&mu;s      | 33.423&mu;s       | 218.328&mu;s      | 654.784&mu;s      |
 | 14    | 6.841&mu;s        | 42.504&mu;s       | 169.198&mu;s      | 218.543&mu;s      |
+| 15    | -                 | -                 | -                 | -                 |
 
 ### Rust
 
@@ -312,6 +328,7 @@ Percentage increase compared to the fastest for each day's part.
 | 12    | **7.092&mu;s**    | **60.067&mu;s**   | **1.922788ms**    | **1.989947ms**    |
 | 13    | **29.642&mu;s**   | **7.983&mu;s**    | **56.705&mu;s**   | **94.33&mu;s**    |
 | 14    | **6.792&mu;s**    | **21.697&mu;s**   | **96.213&mu;s**   | **124.702&mu;s**  |
+| 15    | **86.006&mu;s**   | **3.334ms**       | **328.388ms**     | **331.808ms**     |
 
 ### TypeScript (Deno)
 
@@ -331,6 +348,7 @@ Percentage increase compared to the fastest for each day's part.
 | 12    | -                 | -                 | -                 | -                 |
 | 13    | -                 | -                 | -                 | -                 |
 | 14    | -                 | -                 | -                 | -                 |
+| 15    | -                 | -                 | -                 | -                 |
 
 ### System Information
 
