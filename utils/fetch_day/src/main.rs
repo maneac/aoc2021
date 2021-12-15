@@ -17,7 +17,7 @@ struct Opts {
         long = "day",
         value_name = "DAY",
         possible_values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"],
-        about = "Day to download the instructions and input for (defaults to the min(current day, 25) in EST)"
+        help = "Day to download the instructions and input for (defaults to the min(current day, 25) in EST)"
     )]
     day_opt: Option<usize>,
 
@@ -27,11 +27,11 @@ struct Opts {
     #[clap(
         short = 'f',
         long = "download",
-        about = "Force the download of the instructions"
+        help = "Force the download of the instructions"
     )]
     force_download: bool,
 
-    #[clap(long, about = "Skip the downloading of the input data")]
+    #[clap(long, help = "Skip the downloading of the input data")]
     no_data: bool,
 
     #[clap(
@@ -40,19 +40,19 @@ struct Opts {
         use_delimiter = true,
         possible_values = ["go", "rs", "ts", ""],
         default_value = "go,rs,ts",
-        about = "Languages to create instructions and templates for"
+        help = "Languages to create instructions and templates for"
     )]
     langs: Option<Vec<String>>,
 
-    #[clap(long, about = "Skip code template creation for each language")]
+    #[clap(long, help = "Skip code template creation for each language")]
     skip_templates: bool,
 
-    #[clap(long, about = "Keep the raw instruction HTML file")]
+    #[clap(long, help = "Keep the raw instruction HTML file")]
     keep_instructions: bool,
 
     #[clap(
         long,
-        about = "Update the READMEs to contain part 2. Alias for '--download --no-data --skip-templates'"
+        help = "Update the READMEs to contain part 2. Alias for '--download --no-data --skip-templates'"
     )]
     part_2: bool,
 }
