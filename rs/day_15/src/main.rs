@@ -44,8 +44,8 @@ fn part_1(input: &Input) -> usize {
         let (n_y, n_x) = (node >> 9, node & 0x1FF);
 
         for (x, y) in [
-            (n_x, n_y - 1),
-            (n_x - 1, n_y),
+            (n_x, n_y.wrapping_sub(1)),
+            (n_x.wrapping_sub(1), n_y),
             (n_x + 1, n_y),
             (n_x, n_y + 1),
         ] {
