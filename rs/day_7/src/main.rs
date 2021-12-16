@@ -1,7 +1,10 @@
-#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![deny(clippy::all)]
 #![feature(test)]
 extern crate test;
+
 use std::{fs::read_to_string, path::Path};
+
+type Input = Vec<usize>;
 
 fn main() {
     let data = read_data("./data");
@@ -10,10 +13,14 @@ fn main() {
     println!("Part 2: {}", part_2(&data));
 }
 
-fn read_data(data_dir: &str) -> Vec<usize> {
-    let mut crabs: Vec<usize> = read_to_string(Path::new(data_dir).join("day_7.txt"))
-        .unwrap()
-        .trim()
+fn read_data(data_dir: &str) -> Input {
+    let contents = read_to_string(Path::new(data_dir).join("day_7.txt")).unwrap();
+
+    parse_contents(contents.trim())
+}
+
+fn parse_contents(contents: &str) -> Input {
+    let mut crabs: Input = contents
         .split(',')
         .map(|num| num.parse::<usize>().unwrap())
         .collect();
@@ -21,14 +28,14 @@ fn read_data(data_dir: &str) -> Vec<usize> {
     crabs
 }
 
-fn part_1(input: &[usize]) -> usize {
+fn part_1(input: &Input) -> usize {
     let target = input[input.len() / 2];
     input.iter().fold(0usize, |acc, &ship| {
         acc + (ship as isize - target as isize).abs() as usize
     })
 }
 
-fn part_2(input: &[usize]) -> usize {
+fn part_2(input: &Input) -> usize {
     (0..*input.last().unwrap()).fold(usize::MAX, |total, target| {
         total.min(input.iter().fold(0usize, |subtotal, &crab| {
             let diff = (crab as isize - target as isize).abs() as usize;
@@ -38,65 +45,89 @@ fn part_2(input: &[usize]) -> usize {
 }
 
 #[cfg(test)]
-mod day_7 {
+mod tests {
     use super::*;
     use test::Bencher;
 
     const PART_1: usize = 340056;
     const PART_2: usize = 96592275;
 
-    #[test]
-    fn test_part_1_real() {
-        let data = read_data("../../data");
+    mod read_data {
+        use super::*;
 
-        assert_eq!(PART_1, part_1(&data));
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            b.iter(|| {
+                let data = read_data("../../data");
+
+                assert_ne!(data, Input::default())
+            })
+        }
     }
 
-    #[test]
-    fn test_part_2_real() {
-        let data = read_data("../../data");
+    mod part_1 {
+        use super::*;
 
-        assert_eq!(PART_2, part_2(&data));
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                data: example_data(),
+                expected: 37,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_1,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_1(&test.data))
+        }
     }
 
-    #[test]
-    fn test_part_1_example() {
-        let data: Vec<usize> = vec![0, 1, 1, 2, 2, 2, 4, 7, 14, 16];
+    mod part_2 {
+        use super::*;
 
-        assert_eq!(37, part_1(&data))
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                data: example_data(),
+                expected: 168,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_2,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_2(&test.data))
+        }
     }
 
-    #[test]
-    fn test_part_2_example() {
-        let data: Vec<usize> = vec![0, 1, 1, 2, 2, 2, 4, 7, 14, 16];
-
-        assert_eq!(168, part_2(&data))
-    }
-
-    #[bench]
-    fn bench_read_data(b: &mut Bencher) {
-        b.iter(|| {
-            let data = read_data("../../data");
-
-            assert_ne!(data, Vec::new());
-        })
-    }
-
-    #[bench]
-    fn bench_part_1(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_1, part_1(&data));
-        })
-    }
-
-    #[bench]
-    fn bench_part_2(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_2, part_2(&data));
-        })
+    fn example_data() -> Input {
+        vec![0, 1, 1, 2, 2, 2, 4, 7, 14, 16]
     }
 }

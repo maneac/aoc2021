@@ -1,7 +1,10 @@
-#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![deny(clippy::all)]
 #![feature(test)]
 extern crate test;
+
 use std::{fs::read_to_string, path::Path, str::FromStr};
+
+type Input = Vec<Display>;
 
 fn main() {
     let data = read_data("./data");
@@ -10,16 +13,20 @@ fn main() {
     println!("Part 2: {}", part_2(&data));
 }
 
-fn read_data(data_dir: &str) -> Vec<Display> {
-    read_to_string(Path::new(data_dir).join("day_8.txt"))
-        .unwrap()
-        .trim()
+fn read_data(data_dir: &str) -> Input {
+    let contents = read_to_string(Path::new(data_dir).join("day_8.txt")).unwrap();
+
+    parse_contents(contents.trim())
+}
+
+fn parse_contents(contents: &str) -> Input {
+    contents
         .lines()
         .map(|line| Display::from_str(line).unwrap())
         .collect()
 }
 
-fn part_1(input: &[Display]) -> usize {
+fn part_1(input: &Input) -> usize {
     input.iter().fold(0usize, |acc, display| {
         acc + display
             .output
@@ -29,7 +36,7 @@ fn part_1(input: &[Display]) -> usize {
     })
 }
 
-fn part_2(input: &[Display]) -> usize {
+fn part_2(input: &Input) -> usize {
     input.iter().map(|d| d.decode()).sum()
 }
 
@@ -163,46 +170,46 @@ impl Display {
 }
 
 #[cfg(test)]
-mod day_8 {
+mod tests {
     use super::*;
-    use std::fs::{create_dir, write};
     use test::Bencher;
 
     const PART_1: usize = 284;
     const PART_2: usize = 973499;
 
-    #[test]
-    fn test_part_1_real() {
-        let data = read_data("../../data");
+    mod read_data {
+        use super::*;
 
-        assert_eq!(PART_1, part_1(&data));
-    }
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            b.iter(|| {
+                let data = read_data("../../data");
 
-    #[test]
-    fn test_part_2_real() {
-        let data = read_data("../../data");
-
-        assert_eq!(PART_2, part_2(&data));
-    }
-
-    #[test]
-    fn test_read_data_example_1() {
-        let input =
-            "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf";
-
-        let tmp_path = Path::new("/tmp/example1");
-        if !tmp_path.exists() {
-            create_dir(tmp_path).unwrap();
+                assert_ne!(data, Input::default())
+            })
         }
-        write(tmp_path.join("day_8.txt"), input).unwrap();
-
-        assert_eq!(example_1_data(), read_data(tmp_path.to_str().unwrap()));
     }
 
-    #[test]
-    fn test_read_data_example_2() {
-        let input =
-            "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
+    mod parse_contents {
+        use super::*;
+
+        struct Case<'c> {
+            input: &'c str,
+            expected: Input,
+        }
+
+        #[test]
+        fn example_1() {
+            run(&Case{
+                input:            "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf",
+                expected: example_1_data(),
+            })
+        }
+
+        #[test]
+        fn example_2() {
+            run(&Case {
+                input: "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
 edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
 fgaebd cg bdaec gdafb agbcfd gdcbef bgcad gfac gcb cdgabef | cg cg fdcagb cbg
 fbegcd cbd adcefb dageb afcb bc aefdc ecdab fgdeca fcdbega | efabcd cedba gadfec cb
@@ -212,50 +219,99 @@ dbcfg fgd bdegcaf fgec aegbdf ecdfab fbedc dacgb gdcebf gf | cefg dcbef fcge gbc
 bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd | ed bcgafe cdgba cbgef
 egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
 gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
-";
-
-        let tmp_path = Path::new("/tmp/example2");
-        if !tmp_path.exists() {
-            create_dir(tmp_path).unwrap();
+",
+                expected: example_2_data(),
+            })
         }
-        write(tmp_path.join("day_8.txt"), input).unwrap();
 
-        assert_eq!(example_2_data(), read_data(tmp_path.to_str().unwrap()));
+        fn run(test: &Case) {
+            assert_eq!(test.expected, parse_contents(test.input))
+        }
     }
 
-    #[test]
-    fn test_part_1_example_1() {
-        let data = example_1_data();
+    mod part_1 {
+        use super::*;
 
-        assert_eq!(0, part_1(&data));
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
+
+        #[test]
+        fn example_1() {
+            run(&Case {
+                data: example_1_data(),
+                expected: 0,
+            })
+        }
+
+        #[test]
+        fn example_2() {
+            run(&Case {
+                data: example_2_data(),
+                expected: 26,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_1,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_1(&test.data))
+        }
     }
 
-    #[test]
-    fn test_part_1_example_2() {
-        let data = example_2_data();
+    mod part_2 {
+        use super::*;
 
-        assert_eq!(26, part_1(&data));
-    }
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
 
-    #[test]
-    fn test_part_2_example_1() {
-        let data = example_1_data();
+        #[test]
+        fn example_1() {
+            run(&Case {
+                data: example_1_data(),
+                expected: 5353,
+            })
+        }
 
-        assert_eq!(5353, part_2(&data));
-    }
+        #[test]
+        fn example_2() {
+            run(&Case {
+                data: example_2_data(),
+                expected: 61229,
+            })
+        }
 
-    #[test]
-    fn test_part_2_example_2() {
-        let data = example_2_data();
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_2,
+            };
 
-        assert_eq!(61229, part_2(&data));
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_2(&test.data))
+        }
     }
 
     fn bit(chr: char) -> u8 {
         1 << (chr as u8 - b'a')
     }
 
-    fn example_1_data() -> Vec<Display> {
+    fn example_1_data() -> Input {
         vec![Display {
             digits: [
                 bit('a') | bit('c') | bit('e') | bit('d') | bit('g') | bit('f') | bit('b'),
@@ -278,7 +334,7 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
         }]
     }
 
-    fn example_2_data() -> Vec<Display> {
+    fn example_2_data() -> Input {
         vec![
             Display {
                 digits: [
@@ -481,32 +537,5 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
                 ],
             },
         ]
-    }
-
-    #[bench]
-    fn bench_read_data(b: &mut Bencher) {
-        b.iter(|| {
-            let data = read_data("../../data");
-
-            assert_ne!(data, Vec::new());
-        })
-    }
-
-    #[bench]
-    fn bench_part_1(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_1, part_1(&data));
-        })
-    }
-
-    #[bench]
-    fn bench_part_2(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_2, part_2(&data));
-        })
     }
 }

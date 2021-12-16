@@ -4,6 +4,8 @@ extern crate test;
 
 use std::{fs::read_to_string, path::Path};
 
+type Input = Packet;
+
 fn main() {
     let data = read_data("./data");
 
@@ -12,11 +14,13 @@ fn main() {
 }
 
 fn read_data(data_dir: &str) -> Input {
-    Input::from(
-        read_to_string(Path::new(data_dir).join("day_16.txt"))
-            .unwrap()
-            .trim(),
-    )
+    let contents = read_to_string(Path::new(data_dir).join("day_16.txt")).unwrap();
+
+    parse_contents(contents.trim())
+}
+
+fn parse_contents(contents: &str) -> Input {
+    Input::from(contents)
 }
 
 fn part_1(input: &Input) -> usize {
@@ -26,8 +30,6 @@ fn part_1(input: &Input) -> usize {
 fn part_2(input: &Input) -> usize {
     input.evaluate()
 }
-
-type Input = Packet;
 
 #[derive(Debug, PartialEq, PartialOrd)]
 enum Operation {
@@ -142,9 +144,6 @@ impl OperatorPacket {
     }
 }
 
-#[cfg(test)]
-mod day_16;
-
 #[derive(Debug, PartialEq, PartialOrd)]
 struct Biterator {
     contents: Vec<u8>,
@@ -251,5 +250,262 @@ impl Iterator for Biterator {
         }
 
         Some(out)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use test::Bencher;
+
+    const PART_1: usize = 877;
+    const PART_2: usize = 194435634456;
+
+    mod read_data {
+        use super::*;
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            b.iter(|| {
+                let data = read_data("../../data");
+
+                assert_ne!(data, Packet::Empty);
+            })
+        }
+    }
+
+    mod parse_contents {
+        use super::*;
+
+        struct Case<'c> {
+            input: &'c str,
+            expected: Packet,
+        }
+
+        #[test]
+        fn literal() {
+            run(&Case {
+                input: "D2FE28",
+                expected: Packet::Literal(LiteralPacket {
+                    version: 6,
+                    value: 2021,
+                }),
+            });
+        }
+
+        #[test]
+        fn operator_type_0() {
+            run(&Case {
+                input: "38006F45291200",
+                expected: Packet::Operator(OperatorPacket {
+                    version: 1,
+                    operator: Operation::LessThan,
+                    sub_packets: vec![
+                        Packet::Literal(LiteralPacket {
+                            version: 6,
+                            value: 10,
+                        }),
+                        Packet::Literal(LiteralPacket {
+                            version: 2,
+                            value: 20,
+                        }),
+                    ],
+                }),
+            });
+        }
+
+        #[test]
+        fn operator_type_1() {
+            run(&Case {
+                input: "EE00D40C823060",
+                expected: Packet::Operator(OperatorPacket {
+                    version: 7,
+                    operator: Operation::Maximum,
+                    sub_packets: vec![
+                        Packet::Literal(LiteralPacket {
+                            version: 2,
+                            value: 1,
+                        }),
+                        Packet::Literal(LiteralPacket {
+                            version: 4,
+                            value: 2,
+                        }),
+                        Packet::Literal(LiteralPacket {
+                            version: 1,
+                            value: 3,
+                        }),
+                    ],
+                }),
+            });
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                input: "8A004A801A8002F478",
+                expected: Packet::Operator(OperatorPacket {
+                    version: 4,
+                    operator: Operation::Minimum,
+                    sub_packets: vec![Packet::Operator(OperatorPacket {
+                        version: 1,
+                        operator: Operation::Minimum,
+                        sub_packets: vec![Packet::Operator(OperatorPacket {
+                            version: 5,
+                            operator: Operation::Minimum,
+                            sub_packets: vec![Packet::Literal(LiteralPacket {
+                                version: 6,
+                                value: 15,
+                            })],
+                        })],
+                    })],
+                }),
+            })
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, Input::from(test.input))
+        }
+    }
+
+    mod part_1 {
+        use super::*;
+
+        struct Case {
+            data: Packet,
+            expected: usize,
+        }
+
+        #[test]
+        fn example_1() {
+            run(&Case {
+                data: Input::from("8A004A801A8002F478"),
+                expected: 16,
+            })
+        }
+
+        #[test]
+        fn example_2() {
+            run(&Case {
+                data: Input::from("620080001611562C8802118E34"),
+                expected: 12,
+            })
+        }
+
+        #[test]
+        fn example_3() {
+            run(&Case {
+                data: Input::from("C0015000016115A2E0802F182340"),
+                expected: 23,
+            })
+        }
+
+        #[test]
+        fn example_4() {
+            run(&Case {
+                data: Input::from("A0016C880162017C3686B18A3D4780"),
+                expected: 31,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_1,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_1(&test.data))
+        }
+    }
+
+    mod part_2 {
+        use super::*;
+
+        struct Case {
+            data: Packet,
+            expected: usize,
+        }
+
+        #[test]
+        fn sum() {
+            run(&Case {
+                data: Input::from("C200B40A82"),
+                expected: 3,
+            });
+        }
+
+        #[test]
+        fn product() {
+            run(&Case {
+                data: Input::from("04005AC33890"),
+                expected: 54,
+            });
+        }
+
+        #[test]
+        fn minimum() {
+            run(&Case {
+                data: Input::from("880086C3E88112"),
+                expected: 7,
+            });
+        }
+
+        #[test]
+        fn maximum() {
+            run(&Case {
+                data: Input::from("CE00C43D881120"),
+                expected: 9,
+            });
+        }
+
+        #[test]
+        fn less_than() {
+            run(&Case {
+                data: Input::from("D8005AC2A8F0"),
+                expected: 1,
+            });
+        }
+
+        #[test]
+        fn greater_than() {
+            run(&Case {
+                data: Input::from("F600BC2D8F"),
+                expected: 0,
+            });
+        }
+
+        #[test]
+        fn equal_to() {
+            run(&Case {
+                data: Input::from("9C005AC2F8F0"),
+                expected: 0,
+            });
+        }
+
+        #[test]
+        fn nested_equal_to() {
+            run(&Case {
+                data: Input::from("9C0141080250320F1802104A08"),
+                expected: 1,
+            });
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_2,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_2(&test.data))
+        }
     }
 }

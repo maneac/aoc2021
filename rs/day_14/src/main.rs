@@ -1,8 +1,16 @@
-#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![deny(clippy::all)]
 #![feature(test)]
 extern crate test;
 
 use std::{collections::HashMap, fs::read_to_string, path::Path};
+
+#[derive(Debug, PartialEq, Default)]
+struct Input {
+    first: u8,
+    last: u8,
+    initial: HashMap<u16, u64>,
+    insertions: HashMap<u16, u16>,
+}
 
 fn main() {
     let data = read_data("./data");
@@ -14,7 +22,11 @@ fn main() {
 fn read_data(data_dir: &str) -> Input {
     let contents = read_to_string(Path::new(data_dir).join("day_14.txt")).unwrap();
 
-    let (input, rules) = contents.trim().split_once("\n\n").unwrap();
+    parse_contents(contents.trim())
+}
+
+fn parse_contents(contents: &str) -> Input {
+    let (input, rules) = contents.split_once("\n\n").unwrap();
 
     let initial: HashMap<u16, u64> =
         input
@@ -54,14 +66,6 @@ fn part_1(input: &Input) -> u64 {
 
 fn part_2(input: &Input) -> u64 {
     input.polymerize(40)
-}
-
-#[derive(Debug, PartialEq, Default)]
-struct Input {
-    first: u8,
-    last: u8,
-    initial: HashMap<u16, u64>,
-    insertions: HashMap<u16, u16>,
 }
 
 impl Input {
@@ -117,31 +121,38 @@ impl Input {
 }
 
 #[cfg(test)]
-mod day_14 {
+mod tests {
     use super::*;
-    use std::fs::write;
     use test::Bencher;
 
     const PART_1: u64 = 2584;
     const PART_2: u64 = 3816397135460;
 
-    #[test]
-    fn test_part_1_real() {
-        let data = read_data("../../data");
+    mod read_data {
+        use super::*;
 
-        assert_eq!(PART_1, part_1(&data));
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            b.iter(|| {
+                let data = read_data("../../data");
+
+                assert_ne!(data, Input::default())
+            })
+        }
     }
 
-    #[test]
-    fn test_part_2_real() {
-        let data = read_data("../../data");
+    mod parse_contents {
+        use super::*;
 
-        assert_eq!(PART_2, part_2(&data));
-    }
+        struct Case<'c> {
+            input: &'c str,
+            expected: Input,
+        }
 
-    #[test]
-    fn test_read_data() {
-        let input = "NNCB
+        #[test]
+        fn example() {
+            run(&Case {
+                input: "NNCB
 
 CH -> B
 HH -> N
@@ -158,25 +169,76 @@ BN -> B
 BB -> N
 BC -> B
 CC -> N
-CN -> C";
+CN -> C",
+                expected: example_data(),
+            })
+        }
 
-        write(Path::new("/tmp").join("day_14.txt"), input).unwrap();
-
-        assert_eq!(example_data(), read_data("/tmp"));
+        fn run(test: &Case) {
+            assert_eq!(test.expected, parse_contents(test.input))
+        }
     }
 
-    #[test]
-    fn test_part_1_example() {
-        let data = example_data();
+    mod part_1 {
+        use super::*;
 
-        assert_eq!(1588, part_1(&data));
+        struct Case {
+            data: Input,
+            expected: u64,
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                data: example_data(),
+                expected: 1588,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_1,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_1(&test.data))
+        }
     }
 
-    #[test]
-    fn test_part_2_example() {
-        let data = example_data();
+    mod part_2 {
+        use super::*;
 
-        assert_eq!(2188189693529, part_2(&data));
+        struct Case {
+            data: Input,
+            expected: u64,
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                data: example_data(),
+                expected: 2188189693529,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_2,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_2(&test.data))
+        }
     }
 
     fn example_data() -> Input {
@@ -211,32 +273,5 @@ CN -> C";
             initial,
             insertions,
         }
-    }
-
-    #[bench]
-    fn bench_read_data(b: &mut Bencher) {
-        b.iter(|| {
-            let data = read_data("../../data");
-
-            assert_ne!(data, Input::default());
-        })
-    }
-
-    #[bench]
-    fn bench_part_1(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_1, part_1(&data));
-        })
-    }
-
-    #[bench]
-    fn bench_part_2(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_2, part_2(&data));
-        })
     }
 }
