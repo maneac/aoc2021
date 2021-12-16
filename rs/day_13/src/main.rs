@@ -1,8 +1,14 @@
-#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![deny(clippy::all)]
 #![feature(test)]
 extern crate test;
 
 use std::{cmp::Ordering, fs::read_to_string, path::Path};
+
+#[derive(Debug, PartialEq, PartialOrd, Default)]
+struct Input {
+    points: Vec<(usize, usize)>,
+    folds: Vec<(usize, usize)>,
+}
 
 fn main() {
     let data = read_data("./data");
@@ -14,7 +20,11 @@ fn main() {
 fn read_data(data_dir: &str) -> Input {
     let contents = read_to_string(Path::new(data_dir).join("day_13.txt")).unwrap();
 
-    let (point_strs, fold_strs) = contents.trim().split_once("\n\n").unwrap();
+    parse_contents(contents.trim())
+}
+
+fn parse_contents(contents: &str) -> Input {
+    let (point_strs, fold_strs) = contents.split_once("\n\n").unwrap();
 
     let mut points: Vec<(usize, usize)> = point_strs
         .lines()
@@ -129,12 +139,6 @@ fn part_2(input: &Input) -> String {
             acc.push(chr as char);
             acc
         })
-}
-
-#[derive(Debug, PartialEq, PartialOrd, Default)]
-struct Input {
-    points: Vec<(usize, usize)>,
-    folds: Vec<(usize, usize)>,
 }
 
 // missing letters obtained from https://gist.github.com/Aidiakapi/3d8e32c3e552ca1258494cc114d8acf5
@@ -323,31 +327,38 @@ const LETTERS: [&str; 27] = [
 ];
 
 #[cfg(test)]
-mod day_13 {
+mod tests {
     use super::*;
-    use std::fs::write;
     use test::Bencher;
 
     const PART_1: usize = 669;
     const PART_2: &str = "uefzcucj";
 
-    #[test]
-    fn test_part_1_real() {
-        let data = read_data("../../data");
+    mod read_data {
+        use super::*;
 
-        assert_eq!(PART_1, part_1(&data));
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            b.iter(|| {
+                let data = read_data("../../data");
+
+                assert_ne!(data, Input::default())
+            })
+        }
     }
 
-    #[test]
-    fn test_part_2_real() {
-        let data = read_data("../../data");
+    mod parse_contents {
+        use super::*;
 
-        assert_eq!(PART_2, part_2(&data).as_str());
-    }
+        struct Case<'c> {
+            input: &'c str,
+            expected: Input,
+        }
 
-    #[test]
-    fn test_read_data() {
-        let input = "6,10
+        #[test]
+        fn example() {
+            run(&Case {
+                input: "6,10
 0,14
 9,10
 0,3
@@ -367,26 +378,76 @@ mod day_13 {
 9,0
 
 fold along y=7
-fold along x=5";
+fold along x=5",
+                expected: example_data(),
+            })
+        }
 
-        write(Path::new("/tmp").join("day_13.txt"), input).unwrap();
-
-        assert_eq!(example_data(), read_data("/tmp"));
+        fn run(test: &Case) {
+            assert_eq!(test.expected, parse_contents(test.input))
+        }
     }
 
-    #[test]
-    fn test_part_1_example() {
-        let data = example_data();
+    mod part_1 {
+        use super::*;
 
-        assert_eq!(17, part_1(&data));
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                data: example_data(),
+                expected: 17,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_1,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_1(&test.data))
+        }
     }
 
-    #[test]
-    fn test_part_2_example() {
-        let data = example_data();
+    mod part_2 {
+        use super::*;
 
-        // '{' = 'z'+1
-        assert_eq!("{", part_2(&data).as_str());
+        struct Case<'c> {
+            data: Input,
+            expected: &'c str,
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                data: example_data(),
+                expected: "{",
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_2,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_2(&test.data))
+        }
     }
 
     fn example_data() -> Input {
@@ -413,32 +474,5 @@ fold along x=5";
             ],
             folds: vec![(0, 7), (5, 0)],
         }
-    }
-
-    #[bench]
-    fn bench_read_data(b: &mut Bencher) {
-        b.iter(|| {
-            let data = read_data("../../data");
-
-            assert_ne!(data, Input::default());
-        })
-    }
-
-    #[bench]
-    fn bench_part_1(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_1, part_1(&data));
-        })
-    }
-
-    #[bench]
-    fn bench_part_2(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_2, part_2(&data));
-        })
     }
 }

@@ -31,15 +31,15 @@ The first order of business is to figure out how quickly the depth increases, ju
 To do this, count **the number of times a depth measurement increases** from the previous measurement. (There is no measurement before the first measurement.) In the example above, the changes are as follows:
 
 <pre><code>199 (N/A - no previous measurement)
-200 (**increased**)
-208 (**increased**)
-210 (**increased**)
+200 (<b>increased</b>)
+208 (<b>increased</b>)
+210 (<b>increased</b>)
 200 (decreased)
-207 (**increased**)
-240 (**increased**)
-269 (**increased**)
+207 (<b>increased</b>)
+240 (<b>increased</b>)
+269 (<b>increased</b>)
 260 (decreased)
-263 (**increased**)
+263 (<b>increased</b>)
 </code></pre>
 
 In this example, there are **`7`** measurements that are larger than the previous measurement.
@@ -52,13 +52,13 @@ Considering every single measurement isn't as useful as you expected: there's ju
 
 Instead, consider sums of a **three-measurement sliding window**.  Again considering the above example:
 
-<pre><code>199  A
-200  A B
-208  A B C
+<pre><code>199  A      
+200  A B    
+208  A B C  
 210    B C D
 200  E   C D
 207  E F   D
-240  E F G
+240  E F G  
 269    F G H
 260      G H
 263        H
@@ -71,13 +71,13 @@ Your goal now is to count **the number of times the sum of measurements in this 
 In the above example, the sum of each three-measurement window is as follows:
 
 <pre><code>A: 607 (N/A - no previous sum)
-B: 618 (**increased**)
+B: 618 (<b>increased</b>)
 C: 618 (no change)
 D: 617 (decreased)
-E: 647 (**increased**)
-F: 716 (**increased**)
-G: 769 (**increased**)
-H: 792 (**increased**)
+E: 647 (<b>increased</b>)
+F: 716 (<b>increased</b>)
+G: 769 (<b>increased</b>)
+H: 792 (<b>increased</b>)
 </code></pre>
 
 In this example, there are **`5`** sums that are larger than the previous sum.

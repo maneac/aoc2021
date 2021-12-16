@@ -1,8 +1,13 @@
-#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![deny(clippy::all)]
 #![feature(test)]
 extern crate test;
 
 use std::{cmp::Ordering, fs::read_to_string, path::Path};
+
+#[derive(Debug, PartialEq, PartialOrd, Default)]
+struct Input {
+    nodes: Vec<Node>,
+}
 
 fn main() {
     let data = read_data("./data");
@@ -12,22 +17,27 @@ fn main() {
 }
 
 fn read_data(data_dir: &str) -> Input {
-    let (mut nodes, edges) = read_to_string(Path::new(data_dir).join("day_12.txt"))
-        .unwrap()
-        .trim()
-        .lines()
-        .fold((Vec::new(), Vec::new()), |(mut nodes, mut edges), line| {
-            let (lhs, rhs) = line.split_once('-').unwrap();
+    let contents = read_to_string(Path::new(data_dir).join("day_12.txt")).unwrap();
 
-            for node in [lhs, rhs] {
-                if !nodes.contains(&node.to_string()) {
-                    nodes.push(node.to_owned());
+    parse_contents(contents.trim())
+}
+
+fn parse_contents(contents: &str) -> Input {
+    let (mut nodes, edges) =
+        contents
+            .lines()
+            .fold((Vec::new(), Vec::new()), |(mut nodes, mut edges), line| {
+                let (lhs, rhs) = line.split_once('-').unwrap();
+
+                for node in [lhs, rhs] {
+                    if !nodes.contains(&node.to_string()) {
+                        nodes.push(node.to_owned());
+                    }
                 }
-            }
-            edges.push((lhs.to_owned(), rhs.to_owned()));
+                edges.push((lhs.to_owned(), rhs.to_owned()));
 
-            (nodes, edges)
-        });
+                (nodes, edges)
+            });
 
     nodes.sort_unstable_by(|a, b| {
         if a == "start" || b == "end" {
@@ -38,8 +48,6 @@ fn read_data(data_dir: &str) -> Input {
         }
         a.to_ascii_lowercase().cmp(&b.to_ascii_lowercase())
     });
-
-    dbg!(&nodes);
 
     let mut output = vec![Node::default(); nodes.len()];
 
@@ -68,11 +76,6 @@ fn part_1(input: &Input) -> usize {
 
 fn part_2(input: &Input) -> usize {
     input.paths_single_small_twice(0, 1, false)
-}
-
-#[derive(Debug, PartialEq, PartialOrd, Default)]
-struct Input {
-    nodes: Vec<Node>,
 }
 
 #[derive(Debug, PartialEq, PartialOrd, Default, Clone)]
@@ -118,50 +121,52 @@ impl Input {
 }
 
 #[cfg(test)]
-mod day_12 {
+mod tests {
     use super::*;
-    use std::fs::{create_dir_all, write};
     use test::Bencher;
 
     const PART_1: usize = 4912;
     const PART_2: usize = 150004;
 
-    #[test]
-    fn test_part_1_real() {
-        let data = read_data("../../data");
+    mod read_data {
+        use super::*;
 
-        assert_eq!(PART_1, part_1(&data));
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            b.iter(|| {
+                let data = read_data("../../data");
+
+                assert_ne!(data, Input::default())
+            })
+        }
     }
 
-    #[test]
-    fn test_part_2_real() {
-        let data = read_data("../../data");
+    mod parse_contents {
+        use super::*;
 
-        assert_eq!(PART_2, part_2(&data));
-    }
+        struct Case<'c> {
+            input: &'c str,
+            expected: Input,
+        }
 
-    #[test]
-    fn test_read_data_example_1() {
-        let data = "start-A
+        #[test]
+        fn example_1() {
+            run(&Case {
+                input: "start-A
 start-b
 A-c
 A-b
 b-d
 A-end
-b-end";
-
-        let path = Path::new("/tmp/day_12_1");
-        if !path.exists() {
-            create_dir_all(path).unwrap();
+b-end",
+                expected: example_1_data(),
+            })
         }
-        write(path.join("day_12.txt"), data).unwrap();
 
-        assert_eq!(example_1_data(), read_data(path.to_str().unwrap()));
-    }
-
-    #[test]
-    fn test_read_data_example_2() {
-        let data = "dc-end
+        #[test]
+        fn example_2() {
+            run(&Case {
+                input: "dc-end
 HN-start
 start-kj
 dc-start
@@ -170,20 +175,15 @@ LN-dc
 HN-end
 kj-sa
 kj-HN
-kj-dc";
-
-        let path = Path::new("/tmp/day_12_2");
-        if !path.exists() {
-            create_dir_all(path).unwrap();
+kj-dc",
+                expected: example_2_data(),
+            })
         }
-        write(path.join("day_12.txt"), data).unwrap();
 
-        assert_eq!(example_2_data(), read_data(path.to_str().unwrap()));
-    }
-
-    #[test]
-    fn test_read_data_example_3() {
-        let data = "fs-end
+        #[test]
+        fn example_3() {
+            run(&Case {
+                input: "fs-end
 he-DX
 fs-he
 start-DX
@@ -200,57 +200,108 @@ start-pj
 he-WI
 zg-he
 pj-fs
-start-RW";
-
-        let path = Path::new("/tmp/day_12_3");
-        if !path.exists() {
-            create_dir_all(path).unwrap();
+start-RW",
+                expected: example_3_data(),
+            })
         }
-        write(path.join("day_12.txt"), data).unwrap();
 
-        assert_eq!(example_3_data(), read_data(path.to_str().unwrap()));
+        fn run(test: &Case) {
+            assert_eq!(test.expected, parse_contents(test.input))
+        }
     }
 
-    #[test]
-    fn test_part_1_example_1() {
-        let data = example_1_data();
+    mod part_1 {
+        use super::*;
 
-        assert_eq!(10, part_1(&data));
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
+
+        #[test]
+        fn example_1() {
+            run(&Case {
+                data: example_1_data(),
+                expected: 10,
+            })
+        }
+
+        #[test]
+        fn example_2() {
+            run(&Case {
+                data: example_2_data(),
+                expected: 19,
+            })
+        }
+
+        #[test]
+        fn example_3() {
+            run(&Case {
+                data: example_3_data(),
+                expected: 226,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_1,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_1(&test.data))
+        }
     }
 
-    #[test]
-    fn test_part_1_example_2() {
-        let data = example_2_data();
+    mod part_2 {
+        use super::*;
 
-        assert_eq!(19, part_1(&data));
-    }
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
 
-    #[test]
-    fn test_part_1_example_3() {
-        let data = example_3_data();
+        #[test]
+        fn example_1() {
+            run(&Case {
+                data: example_1_data(),
+                expected: 36,
+            })
+        }
 
-        assert_eq!(226, part_1(&data));
-    }
+        #[test]
+        fn example_2() {
+            run(&Case {
+                data: example_2_data(),
+                expected: 103,
+            })
+        }
 
-    #[test]
-    fn test_part_2_example_1() {
-        let data = example_1_data();
+        #[test]
+        fn example_3() {
+            run(&Case {
+                data: example_3_data(),
+                expected: 3509,
+            })
+        }
 
-        assert_eq!(36, part_2(&data));
-    }
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_2,
+            };
 
-    #[test]
-    fn test_part_2_example_2() {
-        let data = example_2_data();
+            b.iter(|| run(&case))
+        }
 
-        assert_eq!(103, part_2(&data));
-    }
-
-    #[test]
-    fn test_part_2_example_3() {
-        let data = example_3_data();
-
-        assert_eq!(3509, part_2(&data));
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_2(&test.data))
+        }
     }
 
     fn example_1_data() -> Input {
@@ -387,32 +438,5 @@ start-RW";
                 },
             ],
         }
-    }
-
-    #[bench]
-    fn bench_read_data(b: &mut Bencher) {
-        b.iter(|| {
-            let data = read_data("../../data");
-
-            assert_ne!(data, Input::default());
-        })
-    }
-
-    #[bench]
-    fn bench_part_1(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_1, part_1(&data));
-        })
-    }
-
-    #[bench]
-    fn bench_part_2(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_2, part_2(&data));
-        })
     }
 }

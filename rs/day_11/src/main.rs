@@ -1,4 +1,4 @@
-#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![deny(clippy::all)]
 #![feature(test)]
 extern crate test;
 
@@ -8,6 +8,11 @@ use std::{
     path::Path,
 };
 
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
+struct Input {
+    octopodes: [Octopus; 100],
+}
+
 fn main() {
     let data = read_data("./data");
 
@@ -16,44 +21,46 @@ fn main() {
 }
 
 fn read_data(data_dir: &str) -> Input {
-    read_to_string(Path::new(data_dir).join("day_11.txt"))
-        .unwrap()
-        .lines()
-        .enumerate()
-        .fold(
-            Input {
-                octopodes: [Octopus::default(); 100],
-            },
-            |mut acc, (y, row)| {
-                row.char_indices().for_each(|(x, chr)| {
-                    let idx = (y * 10) + x;
-                    acc.octopodes[idx].value = (chr as u8 - b'0') as u8;
+    let contents = read_to_string(Path::new(data_dir).join("day_11.txt")).unwrap();
 
-                    let x = x as isize;
-                    let y = y as isize;
+    parse_contents(contents.trim())
+}
 
-                    acc.octopodes[idx]
-                        .neighbours
-                        .iter_mut()
-                        .zip(
-                            (((10 * (y - 1)) + x - 1)..=((10 * (y - 1)) + x + 1))
-                                .chain([(10 * y) + x - 1, (10 * y) + x + 1])
-                                .chain(((10 * (y + 1)) + x - 1)..=((10 * (y + 1)) + x + 1)),
-                        )
-                        .enumerate()
-                        .for_each(|(idx, (n, target))| {
-                            if !(0..=99).contains(&target)
-                                || (x == 0 && (idx == 0 || idx == 3 || idx == 5))
-                                || (x == 9 && (idx == 2 || idx == 4 || idx == 7))
-                            {
-                                return;
-                            }
-                            *n = target as usize;
-                        });
-                });
-                acc
-            },
-        )
+fn parse_contents(contents: &str) -> Input {
+    contents.lines().enumerate().fold(
+        Input {
+            octopodes: [Octopus::default(); 100],
+        },
+        |mut acc, (y, row)| {
+            row.char_indices().for_each(|(x, chr)| {
+                let idx = (y * 10) + x;
+                acc.octopodes[idx].value = (chr as u8 - b'0') as u8;
+
+                let x = x as isize;
+                let y = y as isize;
+
+                acc.octopodes[idx]
+                    .neighbours
+                    .iter_mut()
+                    .zip(
+                        (((10 * (y - 1)) + x - 1)..=((10 * (y - 1)) + x + 1))
+                            .chain([(10 * y) + x - 1, (10 * y) + x + 1])
+                            .chain(((10 * (y + 1)) + x - 1)..=((10 * (y + 1)) + x + 1)),
+                    )
+                    .enumerate()
+                    .for_each(|(idx, (n, target))| {
+                        if !(0..=99).contains(&target)
+                            || (x == 0 && (idx == 0 || idx == 3 || idx == 5))
+                            || (x == 9 && (idx == 2 || idx == 4 || idx == 7))
+                        {
+                            return;
+                        }
+                        *n = target as usize;
+                    });
+            });
+            acc
+        },
+    )
 }
 
 fn part_1(input: &Input) -> usize {
@@ -117,11 +124,6 @@ impl Default for Octopus {
     }
 }
 
-#[derive(Debug, PartialEq, PartialOrd, Clone)]
-struct Input {
-    octopodes: [Octopus; 100],
-}
-
 impl Input {
     fn flash(&mut self, idx: usize) -> usize {
         let mut octopus = &mut self.octopodes[idx];
@@ -155,31 +157,38 @@ impl Display for Input {
 }
 
 #[cfg(test)]
-mod day_11 {
+mod tests {
     use super::*;
-    use std::fs::write;
     use test::Bencher;
 
     const PART_1: usize = 1681;
     const PART_2: usize = 276;
 
-    #[test]
-    fn test_part_1_real() {
-        let data = read_data("../../data");
+    mod read_data {
+        use super::*;
 
-        assert_eq!(PART_1, part_1(&data));
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            b.iter(|| {
+                let data = read_data("../../data");
+
+                assert_ne!(data.octopodes[0], Octopus::default())
+            })
+        }
     }
 
-    #[test]
-    fn test_part_2_real() {
-        let data = read_data("../../data");
+    mod parse_contents {
+        use super::*;
 
-        assert_eq!(PART_2, part_2(&data));
-    }
+        struct Case<'c> {
+            input: &'c str,
+            expected: Input,
+        }
 
-    #[test]
-    fn test_read_data() {
-        let data = "5483143223
+        #[test]
+        fn example() {
+            run(&Case {
+                input: "5483143223
 2745854711
 5264556173
 6141336146
@@ -188,27 +197,76 @@ mod day_11 {
 2176841721
 6882881134
 4846848554
-5283751526";
+5283751526",
+                expected: example_data(),
+            })
+        }
 
-        let expected = example_data();
-
-        write(Path::new("/tmp").join("day_11.txt"), data).unwrap();
-
-        assert_eq!(expected, read_data("/tmp"));
+        fn run(test: &Case) {
+            assert_eq!(test.expected, parse_contents(test.input))
+        }
     }
 
-    #[test]
-    fn test_part_1_example() {
-        let data = example_data();
+    mod part_1 {
+        use super::*;
 
-        assert_eq!(1656, part_1(&data));
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                data: example_data(),
+                expected: 1656,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_1,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_1(&test.data))
+        }
     }
 
-    #[test]
-    fn test_part_2_example() {
-        let data = example_data();
+    mod part_2 {
+        use super::*;
 
-        assert_eq!(195, part_2(&data));
+        struct Case {
+            data: Input,
+            expected: usize,
+        }
+
+        #[test]
+        fn example() {
+            run(&Case {
+                data: example_data(),
+                expected: 195,
+            })
+        }
+
+        #[bench]
+        fn actual(b: &mut Bencher) {
+            let case = Case {
+                data: read_data("../../data"),
+                expected: PART_2,
+            };
+
+            b.iter(|| run(&case))
+        }
+
+        fn run(test: &Case) {
+            assert_eq!(test.expected, part_2(&test.data))
+        }
     }
 
     fn example_data() -> Input {
@@ -626,32 +684,5 @@ mod day_11 {
                 },
             ],
         }
-    }
-
-    #[bench]
-    fn bench_read_data(b: &mut Bencher) {
-        b.iter(|| {
-            let data = read_data("../../data");
-
-            assert_ne!(data.octopodes[0], Octopus::default());
-        })
-    }
-
-    #[bench]
-    fn bench_part_1(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_1, part_1(&data));
-        })
-    }
-
-    #[bench]
-    fn bench_part_2(b: &mut Bencher) {
-        let data = read_data("../../data");
-
-        b.iter(|| {
-            assert_eq!(PART_2, part_2(&data));
-        })
     }
 }
