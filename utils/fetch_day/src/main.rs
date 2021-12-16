@@ -624,7 +624,9 @@ mod day_{0} {{
     write(
         "Cargo.toml",
         format!(
-            r#"{}, "rs/day_{}"]
+            r#"{}
+    "rs/day_{}",
+]
 "#,
             read_to_string("Cargo.toml")
                 .unwrap()
