@@ -1,4 +1,4 @@
-#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![deny(clippy::all)]
 use chrono::{Datelike, Utc};
 use clap::Parser;
 use regex::Regex;
@@ -101,19 +101,15 @@ fn main() {
         .map(|caps| caps.get(1).unwrap().as_str())
         .collect::<Vec<&str>>();
 
-    let readme_contents = parts
-        .iter()
-        .map(|part| {
-            let mut output = String::new();
-            let mut iter = part.chars().peekable();
-            while iter.peek().is_some() {
-                let out = recursive_parse(&day_url, &mut iter, false);
-                output.push_str(&out);
-            }
-            output
-        })
-        .collect::<Vec<String>>()
-        .join("\n");
+    let readme_contents = parts.iter().fold(String::new(), |mut output, part| {
+        let mut iter = part.chars().peekable();
+        while iter.peek().is_some() {
+            let out = recursive_parse(&day_url, &mut iter, false);
+            output.push_str(&out);
+        }
+        output.push('\n');
+        output
+    });
 
     if let Some(langs) = &opts.langs {
         langs.iter().for_each(|lang| match lang.as_str() {
@@ -543,7 +539,9 @@ edition = "2021"
 extern crate test;
 
 use std::{{fs::read_to_string, path::Path}};
-        
+
+type Input = Vec<String>;
+
 fn main() {{
     let data = read_data("./data");
 
@@ -552,67 +550,129 @@ fn main() {{
 }}
 
 fn read_data(data_dir: &str) -> Input {{
-    let _ = read_to_string(Path::new(data_dir).join("day_{0}.txt")).unwrap();
+    let contents = read_to_string(Path::new(data_dir).join("day_{0}.txt")).unwrap();
+    
+    parse_contents(contents.trim())
+}}
+
+fn parse_contents(contents: &str) -> Input {{
     todo!()
 }}
 
-fn part_1(_input: &Input) -> usize {{
+fn part_1(input: &Input) -> usize {{
     todo!()
 }}
 
-fn part_2(_input: &Input) -> usize {{
+fn part_2(input: &Input) -> usize {{
     todo!()
 }}
-
-type Input = Vec<String>;
 
 #[cfg(test)]
-mod day_{0} {{
+mod tests {{
     use super::*;
     use test::Bencher;
 
     const PART_1: usize = 0;
     const PART_2: usize = 0;
 
-    #[test]
-    fn test_part_1_real() {{
-        let data = read_data("../../data");
+    mod read_data {{
+        use super::*;
 
-        assert_eq!(PART_1, part_1(&data));
+        #[bench]
+        fn actual(b: &mut Bencher) {{
+            b.iter(|| {{
+                let data = read_data("../../data");
+
+                assert_ne!(data, Input::default())
+            }})
+        }}
     }}
 
-    #[test]
-    fn test_part_2_real() {{
-        let data = read_data("../../data");
+    mod parse_contents {{
+        use super::*;
 
-        assert_eq!(PART_2, part_2(&data));
+        struct Case<'c> {{
+            input: &'c str,
+            expected: Input,
+        }}
+
+        #[test]
+        fn example() {{
+            run(&Case {{
+                input: "",
+                expected: example_data(),
+            }})
+        }}
+
+        fn run(test: &Case) {{
+            assert_eq!(test.expected, parse_contents(test.input))
+        }}
     }}
 
-    #[bench]
-    fn bench_read_data(b: &mut Bencher) {{
-        b.iter(|| {{
-            let data = read_data("../../data");
+    mod part_1 {{
+        use super::*;
 
-            assert_ne!(data, Input::new());
-        }})
+        struct Case {{
+            data: Input,
+            expected: usize,
+        }}
+
+        #[test]
+        fn example() {{
+            run(&Case {{
+                data: example_data(),
+                expected: todo!(),
+            }})
+        }}
+
+        #[bench]
+        fn actual(b: &mut Bencher) {{
+            let case = Case {{
+                data: read_data("../../data"),
+                expected: PART_1,
+            }};
+
+            b.iter(|| run(&case))
+        }}
+
+        fn run(test: &Case) {{
+            assert_eq!(test.expected, part_1(&test.data))
+        }}
     }}
 
-    #[bench]
-    fn bench_part_1(b: &mut Bencher) {{
-        let data = read_data("../../data");
+    mod part_2 {{
+        use super::*;
 
-        b.iter(|| {{
-            assert_eq!(PART_1, part_1(&data));
-        }})
+        struct Case {{
+            data: Input,
+            expected: usize,
+        }}
+
+        #[test]
+        fn example() {{
+            run(&Case {{
+                data: example_data(),
+                expected: todo!(),
+            }})
+        }}
+
+        #[bench]
+        fn actual(b: &mut Bencher) {{
+            let case = Case {{
+                data: read_data("../../data"),
+                expected: PART_2,
+            }};
+
+            b.iter(|| run(&case))
+        }}
+
+        fn run(test: &Case) {{
+            assert_eq!(test.expected, part_2(&test.data))
+        }}
     }}
 
-    #[bench]
-    fn bench_part_2(b: &mut Bencher) {{
-        let data = read_data("../../data");
-
-        b.iter(|| {{
-            assert_eq!(PART_2, part_2(&data));
-        }})
+    fn example_data() -> Input {{
+        todo!()
     }}
 }}
 "#,

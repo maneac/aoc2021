@@ -1,9 +1,11 @@
-#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+#![deny(clippy::all)]
 use regex::Regex;
 use std::{
     env::args,
     io::{BufRead, BufReader},
     process::{Command, Stdio},
+    sync::mpsc::{self, Receiver, Sender},
+    thread,
     time::Duration,
 };
 use thousands::Separable;
@@ -131,41 +133,56 @@ fn percent_diff(dur: Duration, min: Duration) -> String {
 
 fn bench_rust(day: usize) -> [[Duration; 4]; 25] {
     let mut cmd = Command::new("cargo");
-    let output = if day > 0 {
+    let bench = if day > 0 {
         cmd.args(["bench", "--package", &format!("day_{}", day)])
     } else {
         cmd.args(["bench", "--package", "day_*"])
     }
     .stdout(Stdio::piped())
+    .stderr(Stdio::piped())
     .spawn()
-    .unwrap()
-    .stdout
     .unwrap();
 
-    let reader = BufReader::new(output);
+    let stdout_reader = BufReader::new(bench.stdout.unwrap());
+    let stderr_reader = BufReader::new(bench.stderr.unwrap());
 
+    let (day_send, day_recv): (Sender<usize>, Receiver<usize>) = mpsc::channel();
+    let s = thread::spawn(move || {
+        stderr_reader
+            .lines()
+            .filter_map(|line| line.ok())
+            .for_each(|line| {
+                println!("{}", line);
+                if let Some(c) = Regex::new(r".*/deps/day_(\d+).*").unwrap().captures(&line) {
+                    day_send
+                        .send(c.get(1).unwrap().as_str().parse::<usize>().unwrap())
+                        .unwrap();
+                }
+            });
+    });
+
+    let mut day = None;
     let mut results = [[Duration::default(); 4]; 25];
-    reader
+    stdout_reader
         .lines()
         .filter_map(|line| line.ok())
         .for_each(|line| {
             println!("{}", line);
-            if !line.contains("::bench") {
+            if !line.contains(" bench: ") {
                 return;
             }
-            Regex::new(r".*?day_(\d+)::bench_([_\w]+).*bench:\s+([\d,]+)")
+            Regex::new(r".*?tests::([_\w]+):.*bench:\s+([\d,]+)")
                 .unwrap()
                 .captures_iter(&line)
                 .for_each(|c| {
-                    let day = c.get(1).unwrap().as_str().parse::<usize>().unwrap();
-                    let part = match c.get(2).unwrap().as_str() {
+                    let part = match c.get(1).unwrap().as_str() {
                         "read_data" => 0,
                         "part_1" => 1,
                         "part_2" => 2,
                         _ => return,
                     };
                     let time = Duration::from_nanos(
-                        c.get(3)
+                        c.get(2)
                             .unwrap()
                             .as_str()
                             .chars()
@@ -179,9 +196,23 @@ fn bench_rust(day: usize) -> [[Duration; 4]; 25] {
                             .fold(0u64, |acc, n| (acc * 10) + n as u64),
                     );
 
-                    results[day - 1][part] = time;
+                    let idx = match day {
+                        Some(day) => day - 1,
+                        None => {
+                            let new_day = day_recv.recv().unwrap();
+                            day = Some(new_day);
+                            new_day - 1
+                        }
+                    };
+
+                    results[idx][part] = time;
+                    if results[idx].iter().filter(|res| res.is_zero()).count() == 1 {
+                        day = None;
+                    }
                 });
         });
+
+    s.join().unwrap();
 
     results
         .iter_mut()
