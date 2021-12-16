@@ -104,7 +104,7 @@ fn from_dur(dur: &Duration, lowest: bool) -> String {
     } else {
         format!("{:#.3?}", dur)
     };
-    d.replace("µ", "&mu;")
+    d.replace("µ", "&mu;").replace(".000", "")
 }
 
 fn res_as_row(day: usize, results: &[String; 4]) -> String {

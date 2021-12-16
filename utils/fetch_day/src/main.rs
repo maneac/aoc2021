@@ -538,7 +538,7 @@ edition = "2021"
     write(
         src_dir.join("main.rs"),
         format!(
-            r#"#![cfg_attr(feature = "cargo-clippy", deny(clippy::all))]
+            r#"#![deny(clippy::all)]
 #![feature(test)]
 extern crate test;
 
