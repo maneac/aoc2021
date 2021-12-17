@@ -37,7 +37,7 @@ fn main() {
         .filter(|(_, ((go, rs), ts))| {
             [go, rs, ts]
                 .iter()
-                .any(|times| times.iter().any(|t| !t.is_zero()))
+                .any(|times| times.iter().any(|t| t.is_some()))
         })
         .for_each(|(day, ((go, rs), ts))| {
             let day = day + 1;
@@ -48,11 +48,11 @@ fn main() {
             let results = go.iter().zip(rs).zip(ts).enumerate().fold(
                 [[EMPTY_STR; 4], [EMPTY_STR; 4], [EMPTY_STR; 4]],
                 |mut acc, (idx, ((&go, rs), ts))| {
-                    let min = *[go, rs, ts].iter().filter(|t| !t.is_zero()).min().unwrap();
+                    let min = [go, rs, ts].iter().filter_map(|&t| t).min().unwrap();
 
-                    acc[0][idx] = from_dur(&go, go == min);
-                    acc[1][idx] = from_dur(&rs, rs == min);
-                    acc[2][idx] = from_dur(&ts, ts == min);
+                    acc[0][idx] = from_dur(&go, go == Some(min));
+                    acc[1][idx] = from_dur(&rs, rs == Some(min));
+                    acc[2][idx] = from_dur(&ts, ts == Some(min));
 
                     if idx == 3 {
                         diffs[0][idx] = format!("    <td><b>{}</b></td>", percent_diff(go, min));
@@ -97,14 +97,14 @@ fn main() {
     println!("{}", diff_table);
 }
 
-fn from_dur(dur: &Duration, lowest: bool) -> String {
-    if dur.is_zero() {
+fn from_dur(dur: &Option<Duration>, lowest: bool) -> String {
+    if dur.is_none() {
         return "-".to_owned();
     }
     let d = if lowest {
-        format!("**{:#.3?}**", dur)
+        format!("**{:#.3?}**", dur.unwrap())
     } else {
-        format!("{:#.3?}", dur)
+        format!("{:#.3?}", dur.unwrap())
     };
     d.replace("µ", "&mu;").replace(".000", "")
 }
@@ -116,10 +116,12 @@ fn res_as_row(day: usize, results: &[String; 4]) -> String {
     )
 }
 
-fn percent_diff(dur: Duration, min: Duration) -> String {
-    if dur.is_zero() {
-        "-".to_owned()
-    } else if dur == min {
+fn percent_diff(dur: Option<Duration>, min: Duration) -> String {
+    if dur.is_none() {
+        return "-".to_owned();
+    }
+    let dur = dur.unwrap();
+    if dur == min {
         "0%".to_owned()
     } else {
         format!(
@@ -131,7 +133,7 @@ fn percent_diff(dur: Duration, min: Duration) -> String {
     }
 }
 
-fn bench_rust(day: usize) -> [[Duration; 4]; 25] {
+fn bench_rust(day: usize) -> [[Option<Duration>; 4]; 25] {
     let mut cmd = Command::new("cargo");
     let bench = if day > 0 {
         cmd.args(["bench", "--package", &format!("day_{}", day)])
@@ -162,7 +164,7 @@ fn bench_rust(day: usize) -> [[Duration; 4]; 25] {
     });
 
     let mut day = None;
-    let mut results = [[Duration::default(); 4]; 25];
+    let mut results = [[None; 4]; 25];
     stdout_reader
         .lines()
         .filter_map(|line| line.ok())
@@ -205,8 +207,8 @@ fn bench_rust(day: usize) -> [[Duration; 4]; 25] {
                         }
                     };
 
-                    results[idx][part] = time;
-                    if results[idx].iter().filter(|res| res.is_zero()).count() == 1 {
+                    results[idx][part] = Some(time);
+                    if results[idx].iter().filter(|res| res.is_none()).count() == 1 {
                         day = None;
                     }
                 });
@@ -214,13 +216,16 @@ fn bench_rust(day: usize) -> [[Duration; 4]; 25] {
 
     s.join().unwrap();
 
-    results
-        .iter_mut()
-        .for_each(|day| day[3] = day[..3].iter().sum());
+    results.iter_mut().for_each(|day| {
+        day[3] = day[..3]
+            .iter()
+            .filter_map(|&d| d)
+            .reduce(|prev, t| prev + t)
+    });
     results
 }
 
-fn bench_go(day: usize) -> [[Duration; 4]; 25] {
+fn bench_go(day: usize) -> [[Option<Duration>; 4]; 25] {
     let mut cmd = Command::new("go");
     let output = if day > 0 {
         cmd.args(["test", "--bench=.", &format!("./go/day_{}/...", day)])
@@ -237,7 +242,7 @@ fn bench_go(day: usize) -> [[Duration; 4]; 25] {
 
     let mut output = String::new();
 
-    let mut results = [[Duration::default(); 4]; 25];
+    let mut results = [[None; 4]; 25];
     let mut day = 0usize;
     reader
         .lines()
@@ -273,20 +278,23 @@ fn bench_go(day: usize) -> [[Duration; 4]; 25] {
                         c.get(2).unwrap().as_str().parse::<f64>().unwrap().round() as u64,
                     );
 
-                    results[day - 1][part] = time;
+                    results[day - 1][part] = Some(time);
                 });
 
             output.push_str(&line);
             output.push('\n');
         });
 
-    results
-        .iter_mut()
-        .for_each(|day| day[3] = day[..3].iter().sum());
+    results.iter_mut().for_each(|day| {
+        day[3] = day[..3]
+            .iter()
+            .filter_map(|&d| d)
+            .reduce(|prev, t| prev + t)
+    });
     results
 }
 
-fn bench_deno(day: usize) -> [[Duration; 4]; 25] {
+fn bench_deno(day: usize) -> [[Option<Duration>; 4]; 25] {
     let mut cmd = Command::new("deno");
     let output = if day > 0 {
         cmd.args([
@@ -307,9 +315,9 @@ fn bench_deno(day: usize) -> [[Duration; 4]; 25] {
 
     let reader = BufReader::new(output);
 
-    let mut results = [[Duration::default(); 4]; 25];
+    let mut results = [[None; 4]; 25];
     let mut part = 0usize;
-    let mut times = [Duration::default(); 4];
+    let mut times = [None; 4];
     reader
         .lines()
         .filter_map(|line| line.ok())
@@ -326,9 +334,12 @@ fn bench_deno(day: usize) -> [[Duration; 4]; 25] {
                     .parse::<usize>()
                     .unwrap()
                     - 1;
-                times[3] = times[..3].iter().sum();
+                times[3] = times[..3]
+                    .iter()
+                    .filter_map(|&d| d)
+                    .reduce(|prev, t| prev + t);
                 results[day] = times;
-                times = [Duration::default(); 4];
+                times = [None; 4];
                 return;
             }
 
@@ -352,7 +363,7 @@ fn bench_deno(day: usize) -> [[Duration; 4]; 25] {
                 return;
             }
 
-            times[part] = Duration::from_nanos(
+            times[part] = Some(Duration::from_nanos(
                 (Regex::new(r".*: ([\d\.]+)ms")
                     .unwrap()
                     .captures(&line)
@@ -364,7 +375,7 @@ fn bench_deno(day: usize) -> [[Duration; 4]; 25] {
                     .unwrap()
                     * 1_000_000.0)
                     .round() as u64,
-            );
+            ));
         });
 
     results
