@@ -320,6 +320,21 @@ Percentage increase compared to the fastest for each day's part.
     <td><b>-</b></td>
   </tr>
   <tr>
+    <td>19</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>0%</td>
+    <td>0%</td>
+    <td>0%</td>
+    <td><b>0%</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+  </tr>
+  <tr>
     <td>20</td>
     <td>-</td>
     <td>-</td>
@@ -383,7 +398,7 @@ Percentage increase compared to the fastest for each day's part.
 | 16    | **15.386&mu;s**   | **273ns**         | **422ns**         | **16.081&mu;s**   |
 | 17    | **1.149&mu;s**    | **0ns**           | **157.311&mu;s**  | **158.460&mu;s**  |
 | 18    | -                 | -                 | -                 | -                 |
-| 19    | -                 | -                 | -                 | -                 |
+| 19    | **50.345&mu;s**   | **3.840s**        | **3.875s**        | **7.715s**        |
 | 20    | **50.088&mu;s**   | **94.455&mu;s**   | **8.234ms**       | **8.379ms**       |
 
 ### TypeScript (Deno)
