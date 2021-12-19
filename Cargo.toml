@@ -22,5 +22,6 @@ members = [
     "rs/day_15",
     "rs/day_16",
     "rs/day_17",
+    "rs/day_19",
     "rs/day_20",
 ]
