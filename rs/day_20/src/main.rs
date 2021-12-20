@@ -189,7 +189,13 @@ mod tests {
         #[test]
         fn example() {
             run(&Case {
-                input: "",
+                input: "..#.#..#####.#.#.#.###.##.....###.##.#..###.####..#####..#....#..#..##..###..######.###...####..#..#####..##..#.#####...##.#.#..#.##..#.#......#.###.######.###.####...#.##.##..#..#..#####.....#.#....###..#.##......#.....#..#..#..##..#...##.######.####.####.#.#...#.......#..#.#.#...####.##.#......#..#...##.#.##..#...##.#.##..###.#......#.#.......#.#.#.####.###.##...#.....####.#..#..#.##.#....##..#.####....##...##..#...#......#.#.......#.......##..####..#...#.#.#...##..#.#..###..#####........#..####......#..#
+
+#..#.
+#....
+##..#
+..#..
+..###",
                 expected: example_data(),
             })
         }
@@ -262,12 +268,59 @@ mod tests {
     }
 
     fn example_data() -> Input {
-        parse_contents("..#.#..#####.#.#.#.###.##.....###.##.#..###.####..#####..#....#..#..##..###..######.###...####..#..#####..##..#.#####...##.#.#..#.##..#.#......#.###.######.###.####...#.##.##..#..#..#####.....#.#....###..#.##......#.....#..#..#..##..#...##.######.####.####.#.#...#.......#..#.#.#...####.##.#......#..#...##.#.##..#...##.#.##..###.#......#.#.......#.#.#.####.###.##...#.....####.#..#..#.##.#....##..#.####....##...##..#...#......#.#.......#.......##..####..#...#.#.#...##..#.#..###..#####........#..####......#..#
-
-#..#.
-#....
-##..#
-..#..
-..###")
+        Input {
+            algorithm: [
+                false, false, true, false, true, false, false, true, true, true, true, true, false,
+                true, false, true, false, true, false, true, true, true, false, true, true, false,
+                false, false, false, false, true, true, true, false, true, true, false, true,
+                false, false, true, true, true, false, true, true, true, true, false, false, true,
+                true, true, true, true, false, false, true, false, false, false, false, true,
+                false, false, true, false, false, true, true, false, false, true, true, true,
+                false, false, true, true, true, true, true, true, false, true, true, true, false,
+                false, false, true, true, true, true, false, false, true, false, false, true, true,
+                true, true, true, false, false, true, true, false, false, true, false, true, true,
+                true, true, true, false, false, false, true, true, false, true, false, true, false,
+                false, true, false, true, true, false, false, true, false, true, false, false,
+                false, false, false, false, true, false, true, true, true, false, true, true, true,
+                true, true, true, false, true, true, true, false, true, true, true, true, false,
+                false, false, true, false, true, true, false, true, true, false, false, true,
+                false, false, true, false, false, true, true, true, true, true, false, false,
+                false, false, false, true, false, true, false, false, false, false, true, true,
+                true, false, false, true, false, true, true, false, false, false, false, false,
+                false, true, false, false, false, false, false, true, false, false, true, false,
+                false, true, false, false, true, true, false, false, true, false, false, false,
+                true, true, false, true, true, true, true, true, true, false, true, true, true,
+                true, false, true, true, true, true, false, true, false, true, false, false, false,
+                true, false, false, false, false, false, false, false, true, false, false, true,
+                false, true, false, true, false, false, false, true, true, true, true, false, true,
+                true, false, true, false, false, false, false, false, false, true, false, false,
+                true, false, false, false, true, true, false, true, false, true, true, false,
+                false, true, false, false, false, true, true, false, true, false, true, true,
+                false, false, true, true, true, false, true, false, false, false, false, false,
+                false, true, false, true, false, false, false, false, false, false, false, true,
+                false, true, false, true, false, true, true, true, true, false, true, true, true,
+                false, true, true, false, false, false, true, false, false, false, false, false,
+                true, true, true, true, false, true, false, false, true, false, false, true, false,
+                true, true, false, true, false, false, false, false, true, true, false, false,
+                true, false, true, true, true, true, false, false, false, false, true, true, false,
+                false, false, true, true, false, false, true, false, false, false, true, false,
+                false, false, false, false, false, true, false, true, false, false, false, false,
+                false, false, false, true, false, false, false, false, false, false, false, true,
+                true, false, false, true, true, true, true, false, false, true, false, false,
+                false, true, false, true, false, true, false, false, false, true, true, false,
+                false, true, false, true, false, false, true, true, true, false, false, true, true,
+                true, true, true, false, false, false, false, false, false, false, false, true,
+                false, false, true, true, true, true, false, false, false, false, false, false,
+                true, false, false, true,
+            ],
+            image: vec![
+                vec![true, false, false, true, false],
+                vec![true, false, false, false, false],
+                vec![true, true, false, false, true],
+                vec![false, false, true, false, false],
+                vec![false, false, true, true, true],
+            ],
+            default: false,
+        }
     }
 }
