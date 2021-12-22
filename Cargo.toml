@@ -4,6 +4,7 @@ default-members = ["utils/fetch_day"]
 
 members = [
     "utils/fetch_day",
+    "transforms",
     "utils/benchmarks",
     "rs/day_1",
     "rs/day_2",
