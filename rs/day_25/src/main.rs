@@ -122,13 +122,15 @@ mod tests {
         #[test]
         fn example() {
             run(&Case {
-                input: "...>...
-.......
-......>
-v.....>
-......>
-.......
-..vvv..",
+                input: "v...>>.vv>
+.vv>>.vv..
+>>.>v>...v
+>>v>>.>.v.
+v>v.vv.v..
+>.>>..v...
+.vv..>.>v.
+v.v..>>v.v
+....v..v.>",
                 expected: example_data(),
             })
         }
@@ -170,16 +172,115 @@ v.....>
     }
 
     fn example_data() -> Input {
-        parse_contents(
-            "v...>>.vv>
-.vv>>.vv..
->>.>v>...v
->>v>>.>.v.
-v>v.vv.v..
->.>>..v...
-.vv..>.>v.
-v.v..>>v.v
-....v..v.>",
-        )
+        vec![
+            vec![
+                Some(true),
+                None,
+                None,
+                None,
+                Some(false),
+                Some(false),
+                None,
+                Some(true),
+                Some(true),
+                Some(false),
+            ],
+            vec![
+                None,
+                Some(true),
+                Some(true),
+                Some(false),
+                Some(false),
+                None,
+                Some(true),
+                Some(true),
+                None,
+                None,
+            ],
+            vec![
+                Some(false),
+                Some(false),
+                None,
+                Some(false),
+                Some(true),
+                Some(false),
+                None,
+                None,
+                None,
+                Some(true),
+            ],
+            vec![
+                Some(false),
+                Some(false),
+                Some(true),
+                Some(false),
+                Some(false),
+                None,
+                Some(false),
+                None,
+                Some(true),
+                None,
+            ],
+            vec![
+                Some(true),
+                Some(false),
+                Some(true),
+                None,
+                Some(true),
+                Some(true),
+                None,
+                Some(true),
+                None,
+                None,
+            ],
+            vec![
+                Some(false),
+                None,
+                Some(false),
+                Some(false),
+                None,
+                None,
+                Some(true),
+                None,
+                None,
+                None,
+            ],
+            vec![
+                None,
+                Some(true),
+                Some(true),
+                None,
+                None,
+                Some(false),
+                None,
+                Some(false),
+                Some(true),
+                None,
+            ],
+            vec![
+                Some(true),
+                None,
+                Some(true),
+                None,
+                None,
+                Some(false),
+                Some(false),
+                Some(true),
+                None,
+                Some(true),
+            ],
+            vec![
+                None,
+                None,
+                None,
+                None,
+                Some(true),
+                None,
+                None,
+                Some(true),
+                None,
+                Some(false),
+            ],
+        ]
     }
 }
