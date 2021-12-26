@@ -48,7 +48,11 @@ fn main() {
             let results = go.iter().zip(rs).zip(ts).enumerate().fold(
                 [[EMPTY_STR; 4], [EMPTY_STR; 4], [EMPTY_STR; 4]],
                 |mut acc, (idx, ((&go, rs), ts))| {
-                    let min = [go, rs, ts].iter().filter_map(|&t| t).min().unwrap();
+                    let min = [go, rs, ts]
+                        .iter()
+                        .filter_map(|&t| t)
+                        .min()
+                        .unwrap_or_default();
 
                     acc[0][idx] = from_dur(&go, go == Some(min));
                     acc[1][idx] = from_dur(&rs, rs == Some(min));
