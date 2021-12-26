@@ -551,7 +551,7 @@ fn main() {{
 
 fn read_data(data_dir: &str) -> Input {{
     let contents = read_to_string(Path::new(data_dir).join("day_{0}.txt")).unwrap();
-    
+
     parse_contents(contents.trim())
 }}
 
