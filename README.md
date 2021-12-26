@@ -50,6 +50,20 @@ Percentage increase compared to the fastest for each day's part.
     <th colspan=4>TypeScript</th>
   </tr>
   <tr>
+    <th>Parse</th>
+    <th>Part 1</th>
+    <th>Part 2</th>
+    <th>Total</th>
+    <th>Parse</th>
+    <th>Part 1</th>
+    <th>Part 2</th>
+    <th>Total</th>
+    <th>Parse</th>
+    <th>Part 1</th>
+    <th>Part 2</th>
+    <th>Total</th>
+  </tr>
+  <tr>
     <td>1</td>
     <td>+8%</td>
     <td>+45%</td>
@@ -365,6 +379,51 @@ Percentage increase compared to the fastest for each day's part.
     <td><b>-</b></td>
   </tr>
   <tr>
+    <td>22</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+  </tr>
+  <tr>
+    <td>23</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+  </tr>
+  <tr>
+    <td>24</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td><b>-</b></td>
+  </tr>
+  <tr>
     <td>25</td>
     <td>-</td>
     <td>-</td>
@@ -406,6 +465,9 @@ Percentage increase compared to the fastest for each day's part.
 | 19    | -                 | -                 | -                 | -                 |
 | 20    | -                 | -                 | -                 | -                 |
 | 21    | -                 | -                 | -                 | -                 |
+| 22    | -                 | -                 | -                 | -                 |
+| 23    | -                 | -                 | -                 | -                 |
+| 24    | -                 | -                 | -                 | -                 |
 | 25    | -                 | -                 | -                 | -                 |
 
 ### Rust
@@ -433,6 +495,9 @@ Percentage increase compared to the fastest for each day's part.
 | 19    | **3.918s**        | **0ns**           | **0ns**           | **3.918s**        |
 | 20    | **50.088&mu;s**   | **94.455&mu;s**   | **8.234ms**       | **8.379ms**       |
 | 21    | **1.116&mu;s**    | **666ns**         | **149.066ms**     | **149.067ms**     |
+| 22    | -                 | -                 | -                 | -                 |
+| 23    | -                 | -                 | -                 | -                 |
+| 24    | -                 | -                 | -                 | -                 |
 | 25    | **169.621&mu;s**  | **47.372ms**      | -                 | **47.542ms**      |
 
 ### TypeScript (Deno)
@@ -460,6 +525,9 @@ Percentage increase compared to the fastest for each day's part.
 | 19    | -                 | -                 | -                 | -                 |
 | 20    | -                 | -                 | -                 | -                 |
 | 21    | -                 | -                 | -                 | -                 |
+| 22    | -                 | -                 | -                 | -                 |
+| 23    | -                 | -                 | -                 | -                 |
+| 24    | -                 | -                 | -                 | -                 |
 | 25    | -                 | -                 | -                 | -                 |
 
 ### System Information
