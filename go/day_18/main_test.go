@@ -5,133 +5,14 @@ import (
 	"testing"
 )
 
-const (
-	part1Solution = 4469
-	part2Solution = 4770
-)
-
-func TestPart1(t *testing.T) {
-	tests := map[string]struct {
-		data     input
-		expected int
-	}{
-		"singlePairExample1": {
-			data:     parseContents("[9,1]"),
-			expected: 29,
-		},
-		"singlePairExample2": {
-			data:     parseContents("[1,9]"),
-			expected: 21,
-		},
-		"nestedSinglePairsExample": {
-			data:     parseContents("[[9,1],[1,9]]"),
-			expected: 129,
-		},
-		"doubleNested": {
-			data:     parseContents("[[9,[1,0]],[1,9]]"),
-			expected: 141,
-		},
-		"example1": {
-			data:     parseContents("[[1,2],[[3,4],5]]"),
-			expected: 143,
-		},
-		"example2": {
-			data:     parseContents("[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"),
-			expected: 1384,
-		},
-		"example3": {
-			data:     parseContents("[[[[1,1],[2,2]],[3,3]],[4,4]]"),
-			expected: 445,
-		},
-		"example4": {
-			data:     parseContents("[[[[3,0],[5,3]],[4,4]],[5,5]]"),
-			expected: 791,
-		},
-		"example5": {
-			data:     parseContents("[[[[5,0],[7,4]],[5,5]],[6,6]]"),
-			expected: 1137,
-		},
-		"example6": {
-			data:     parseContents("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]"),
-			expected: 3488,
-		},
-		"largeExampleReduced": {
-			data:     parseContents("[[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]"),
-			expected: 4140,
-		},
-		"largeExampleExpanded": {
-			data: parseContents(`[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
-[[[5,[2,8]],4],[5,[[9,9],0]]]
-[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]
-[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]
-[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]
-[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]
-[[[[5,4],[7,7]],8],[[8,3],8]]
-[[9,3],[[9,9],[6,[4,9]]]]
-[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
-[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]`),
-			expected: 4140,
-		},
-		"actual": {
-			data:     readData(),
-			expected: part1Solution,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			actual := part1(test.data)
-
-			if actual != test.expected {
-				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
-			}
-		})
-	}
-}
-
-func TestPart2(t *testing.T) {
-	tests := map[string]struct {
-		data     input
-		expected int
-	}{
-		"example": {
-			data: parseContents(`[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
-[[[5,[2,8]],4],[5,[[9,9],0]]]
-[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]
-[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]
-[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]
-[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]
-[[[[5,4],[7,7]],8],[[8,3],8]]
-[[9,3],[[9,9],[6,[4,9]]]]
-[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
-[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]`),
-			expected: 3993,
-		},
-		"actual": {
-			data:     readData(),
-			expected: part2Solution,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			actual := part2(test.data)
-
-			if actual != test.expected {
-				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
-			}
-		})
-	}
-}
-
 func TestParseContents(t *testing.T) {
 	tests := map[string]struct {
-		input    string
-		expected input
+		Input    string
+		expected Input
 	}{
 		"explodeExample1": {
-			input: "[[[[[9,8],1],2],3],4]",
-			expected: func() input {
+			Input: "[[[[[9,8],1],2],3],4]",
+			expected: func() Input {
 				l := newSnailfishList()
 
 				l.PushBack(&snailfish{
@@ -159,16 +40,130 @@ func TestParseContents(t *testing.T) {
 					value: 4,
 				})
 
-				return input{l}
+				return Input{l}
 			}(),
 		},
 	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			actual := parseContents(test.input)
+			actual := parseContents(test.Input)
 
 			if !reflect.DeepEqual(actual, test.expected) {
+				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
+			}
+		})
+	}
+}
+
+func TestPart1(t *testing.T) {
+	tests := map[string]struct {
+		data     Input
+		expected string
+	}{
+		"singlePairExample1": {
+			data:     parseContents("[9,1]"),
+			expected: "29",
+		},
+		"singlePairExample2": {
+			data:     parseContents("[1,9]"),
+			expected: "21",
+		},
+		"nestedSinglePairsExample": {
+			data:     parseContents("[[9,1],[1,9]]"),
+			expected: "129",
+		},
+		"doubleNested": {
+			data:     parseContents("[[9,[1,0]],[1,9]]"),
+			expected: "141",
+		},
+		"example1": {
+			data:     parseContents("[[1,2],[[3,4],5]]"),
+			expected: "143",
+		},
+		"example2": {
+			data:     parseContents("[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"),
+			expected: "1384",
+		},
+		"example3": {
+			data:     parseContents("[[[[1,1],[2,2]],[3,3]],[4,4]]"),
+			expected: "445",
+		},
+		"example4": {
+			data:     parseContents("[[[[3,0],[5,3]],[4,4]],[5,5]]"),
+			expected: "791",
+		},
+		"example5": {
+			data:     parseContents("[[[[5,0],[7,4]],[5,5]],[6,6]]"),
+			expected: "1137",
+		},
+		"example6": {
+			data:     parseContents("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]"),
+			expected: "3488",
+		},
+		"largeExampleReduced": {
+			data:     parseContents("[[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]"),
+			expected: "4140",
+		},
+		"largeExampleExpanded": {
+			data: parseContents(`[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
+[[[5,[2,8]],4],[5,[[9,9],0]]]
+[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]
+[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]
+[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]
+[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]
+[[[[5,4],[7,7]],8],[[8,3],8]]
+[[9,3],[[9,9],[6,[4,9]]]]
+[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
+[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]`),
+			expected: "4140",
+		},
+		"actual": {
+			data:     readData("../../data"),
+			expected: part1Solution,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := test.data.Part1()
+
+			if actual != test.expected {
+				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
+			}
+		})
+	}
+}
+
+func TestPart2(t *testing.T) {
+	tests := map[string]struct {
+		data     Input
+		expected string
+	}{
+		"example": {
+			data: parseContents(`[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
+[[[5,[2,8]],4],[5,[[9,9],0]]]
+[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]
+[[[6,[0,7]],[0,9]],[4,[9,[9,0]]]]
+[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]
+[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]
+[[[[5,4],[7,7]],8],[[8,3],8]]
+[[9,3],[[9,9],[6,[4,9]]]]
+[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]
+[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]`),
+			expected: "3993",
+		},
+		"actual": {
+			data:     readData("../../data"),
+			expected: part2Solution,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := test.data.Part2()
+
+			if actual != test.expected {
 				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
 			}
 		})
@@ -224,7 +219,7 @@ func TestReduceOnce(t *testing.T) {
 
 func TestReduceInput(t *testing.T) {
 	tests := map[string]struct {
-		data     input
+		data     Input
 		expected *snailfishList
 	}{
 		"additionExample1": {
@@ -289,7 +284,7 @@ func TestReduceInput(t *testing.T) {
 
 func BenchmarkReadData(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		if readData() == nil {
+		if readData("../../data") == nil {
 			b.FailNow()
 		}
 	}
@@ -298,9 +293,9 @@ func BenchmarkReadData(b *testing.B) {
 func BenchmarkPart1(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
-		data := readData()
+		data := readData("../../data")
 		b.StartTimer()
-		if part1(data) != part1Solution {
+		if data.Part1() != part1Solution {
 			b.FailNow()
 		}
 	}
@@ -309,9 +304,9 @@ func BenchmarkPart1(b *testing.B) {
 func BenchmarkPart2(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		b.StopTimer()
-		data := readData()
+		data := readData("../../data")
 		b.StartTimer()
-		if part2(data) != part2Solution {
+		if data.Part2() != part2Solution {
 			b.FailNow()
 		}
 	}

@@ -12,43 +12,56 @@ import * as day from "./main.ts";
 const part1Solution = 1840243;
 const part2Solution = 1727785422;
 
-Deno.test("part 1 real", () => {
+Deno.test("read data actual", () => {
+  const input = day.readData();
+  assertNotEquals(input, []);
+});
+
+Deno.test("parse contents example", () => {
+  const input = `forward 5
+down 5
+forward 8
+up 3
+down 8
+forward 2`;
+
+  assertEquals(day.parseContents(input), exampleData());
+});
+
+Deno.test("part 1 example", () => {
+  const input = exampleData();
+
+  assertEquals(day.part1(input), 150);
+});
+
+Deno.test("part 1 actual", () => {
   const input = day.readData();
 
   assertEquals(day.part1(input), part1Solution);
 });
 
-Deno.test("part 2 real", () => {
+Deno.test("part 2 example", () => {
+  const input = exampleData();
+
+  assertEquals(day.part2(input), 900);
+});
+
+Deno.test("part 2 actual", () => {
   const input = day.readData();
 
   assertEquals(day.part2(input), part2Solution);
 });
 
-Deno.test("part 1 example", () => {
-  const input = [
-    { instruction: "forward", amount: 5 },
-    { instruction: "down", amount: 5 },
-    { instruction: "forward", amount: 8 },
-    { instruction: "up", amount: 3 },
-    { instruction: "down", amount: 8 },
-    { instruction: "forward", amount: 2 },
+function exampleData(): day.Input {
+  return [
+    new day.Instruction("forward", 5),
+    new day.Instruction("down", 5),
+    new day.Instruction("forward", 8),
+    new day.Instruction("up", 3),
+    new day.Instruction("down", 8),
+    new day.Instruction("forward", 2),
   ];
-
-  assertEquals(day.part1(input), 150);
-});
-
-Deno.test("part 2 example", () => {
-  const input = [
-    { instruction: "forward", amount: 5 },
-    { instruction: "down", amount: 5 },
-    { instruction: "forward", amount: 8 },
-    { instruction: "up", amount: 3 },
-    { instruction: "down", amount: 8 },
-    { instruction: "forward", amount: 2 },
-  ];
-
-  assertEquals(day.part2(input), 900);
-});
+}
 
 bench({
   name: "read data",

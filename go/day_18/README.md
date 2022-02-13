@@ -21,8 +21,8 @@ There's only one problem: **snailfish numbers must always be reduced**, and the 
 
 To **reduce a snailfish number**, you must repeatedly do the first action in this list that applies to the snailfish number:
 
-  - If any pair is **nested inside four pairs**, the leftmost such pair **explodes**.
-  - If any regular number is **10 or greater**, the leftmost such regular number **splits**.
+- If any pair is **nested inside four pairs**, the leftmost such pair **explodes**.
+- If any regular number is **10 or greater**, the leftmost such regular number **splits**.
 
 Once no action in the above list applies, the snailfish number is reduced.
 
@@ -32,11 +32,11 @@ To **explode** a pair, the pair's left value is added to the first regular numbe
 
 Here are some examples of a single explode action:
 
-  - **`[[[[[9,8],1],2],3],4]`** becomes **`[[[[0,9],2],3],4]`** (the `9` has no regular number to its left, so it is not added to any regular number).
-  - **`[7,[6,[5,[4,[3,2]]]]]`** becomes **`[7,[6,[5,[7,0]]]]`** (the `2` has no regular number to its right, and so it is not added to any regular number).
-  - **`[[6,[5,[4,[3,2]]]],1]`** becomes **`[[6,[5,[7,0]]],3]`**.
-  - **`[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]`** becomes **`[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]`** (the pair `[3,2]` is unaffected because the pair `[7,3]` is further to the left; `[3,2]` would explode on the next action).
-  - **`[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]`** becomes **`[[3,[2,[8,0]]],[9,[5,[7,0]]]]`**.
+- **`[[[[[9,8],1],2],3],4]`** becomes **`[[[[0,9],2],3],4]`** (the `9` has no regular number to its left, so it is not added to any regular number).
+- **`[7,[6,[5,[4,[3,2]]]]]`** becomes **`[7,[6,[5,[7,0]]]]`** (the `2` has no regular number to its right, and so it is not added to any regular number).
+- **`[[6,[5,[4,[3,2]]]],1]`** becomes **`[[6,[5,[7,0]]],3]`**.
+- **`[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]`** becomes **`[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]`** (the pair `[3,2]` is unaffected because the pair `[7,3]` is further to the left; `[3,2]` would explode on the next action).
+- **`[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]`** becomes **`[[3,[2,[8,0]]],[9,[5,[7,0]]]]`**.
 
 To **split** a regular number, replace it with a pair; the left element of the pair should be the regular number divided by two and rounded **down**, while the right element of the pair should be the regular number divided by two and rounded **up**. For example, `10` becomes `[5,5]`, `11` becomes `[5,6]`, `12` becomes `[6,6]`, and so on.
 
@@ -140,12 +140,12 @@ For example, the magnitude of `[9,1]` is **`3*9 + 2*1 = 29`**; the magnitude of 
 
 Here are a few more magnitude examples:
 
-  - `[[1,2],[[3,4],5]]` becomes **`143`**.
-  - `[[[[0,7],4],[[7,8],[6,0]]],[8,1]]` becomes **`1384`**.
-  - `[[[[1,1],[2,2]],[3,3]],[4,4]]` becomes **`445`**.
-  - `[[[[3,0],[5,3]],[4,4]],[5,5]]` becomes **`791`**.
-  - `[[[[5,0],[7,4]],[5,5]],[6,6]]` becomes **`1137`**.
-  - `[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]` becomes **`3488`**.
+- `[[1,2],[[3,4],5]]` becomes **`143`**.
+- `[[[[0,7],4],[[7,8],[6,0]]],[8,1]]` becomes **`1384`**.
+- `[[[[1,1],[2,2]],[3,3]],[4,4]]` becomes **`445`**.
+- `[[[[3,0],[5,3]],[4,4]],[5,5]]` becomes **`791`**.
+- `[[[[5,0],[7,4]],[5,5]],[6,6]]` becomes **`1137`**.
+- `[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]` becomes **`3488`**.
 
 So, given this example homework assignment:
 

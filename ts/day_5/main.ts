@@ -1,32 +1,24 @@
-interface Point {
-  x: number;
-  y: number;
+export type Input = Vector[];
+
+export function readData(): Input {
+  const contents = Deno.readTextFileSync("./data/day_5.txt").trim();
+
+  return parseContents(contents);
 }
 
-interface Vector {
-  from: Point;
-  to: Point;
-}
-
-function readData(): Vector[] {
-  const input = Deno.readTextFileSync("./data/day_5.txt").trim();
-
-  return parseContents(input);
-}
-
-function parseContents(input: string): Vector[] {
-  return input.split("\n").map(
+export function parseContents(contents: string): Input {
+  return contents.split("\n").map(
     (line) => {
       const fromTo = line.split(" -> ").map((point) => {
         const parts = point.split(",").map((v) => +v);
-        return { x: parts[0], y: parts[1] };
+        return new Point(parts[0], parts[1]);
       });
-      return { from: fromTo[0], to: fromTo[1] };
+      return new Vector(fromTo[0], fromTo[1]);
     },
   );
 }
 
-function part1(data: Vector[]): number {
+export function part1(data: Input): number {
   return Object.entries(
     data.filter(({ from, to }) => from.x == to.x || from.y == to.y).reduce(
       (acc, { from, to }) => {
@@ -47,7 +39,7 @@ function part1(data: Vector[]): number {
   ).filter(([_, count]) => count > 1).length;
 }
 
-function part2(data: Vector[]): number {
+export function part2(data: Input): number {
   return Object.entries(
     data.reduce((acc, { from, to }) => {
       if (from.x == to.x || from.y == to.y) {
@@ -78,12 +70,29 @@ function part2(data: Vector[]): number {
   ).filter(([_, count]) => count > 1).length;
 }
 
-function main() {
+export class Point {
+  x: number;
+  y: number;
+
+  constructor(x: number, y: number) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+export class Vector {
+  from: Point;
+  to: Point;
+
+  constructor(from: Point, to: Point) {
+    this.from = from;
+    this.to = to;
+  }
+}
+
+export function main() {
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
-
-export { main, parseContents, part1, part2, readData };
-export type { Vector };

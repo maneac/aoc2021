@@ -1,12 +1,20 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-type input [100]*octopus
+const (
+	part1Solution = "1681"
+	part2Solution = "276"
+)
+
+type Input [100]*octopus
 
 type octopus struct {
 	value      uint8
@@ -14,14 +22,17 @@ type octopus struct {
 }
 
 func main() {
-	data := readData()
-
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+	bench.Config{
+		Filename:      "./bench/results/go/day_11.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() input {
-	contents, err := os.ReadFile("../../data/day_11.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_11.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -29,8 +40,8 @@ func readData() input {
 	return parseContents(string(contents))
 }
 
-func parseContents(contents string) input {
-	octopodes := input{}
+func parseContents(contents string) Input {
+	octopodes := Input{}
 	for idx := range octopodes {
 		octopodes[idx] = new(octopus)
 	}
@@ -57,48 +68,48 @@ func parseContents(contents string) input {
 	return octopodes
 }
 
-func part1(input input) int {
+func (i Input) Part1() string {
 	flashCount := 0
-	for i := 0; i < 100; i++ {
-		for _, octopus := range input {
+	for iter := 0; iter < 100; iter++ {
+		for _, octopus := range i {
 			octopus.value++
 		}
 
-		for _, octopus := range input {
+		for _, octopus := range i {
 			if octopus.value > 9 {
-				flashCount += input.flash(octopus)
+				flashCount += i.flash(octopus)
 			}
 		}
 	}
-	return flashCount
+	return fmt.Sprint(flashCount)
 }
 
-func part2(input input) int {
+func (i Input) Part2() string {
 	iteration := 0
 	for {
 		iteration++
-		for _, octopus := range input {
+		for _, octopus := range i {
 			octopus.value++
 		}
 
-		for _, octopus := range input {
+		for _, octopus := range i {
 			if octopus.value > 9 {
-				input.flash(octopus)
+				i.flash(octopus)
 			}
 		}
 
 		total := 0
-		for _, octopus := range input {
+		for _, octopus := range i {
 			total += int(octopus.value)
 		}
 		if total == 0 {
 			break
 		}
 	}
-	return iteration
+	return fmt.Sprint(iteration)
 }
 
-func (i input) flash(octopus *octopus) int {
+func (i Input) flash(octopus *octopus) int {
 	if octopus.value < 9 {
 		if octopus.value > 0 {
 			octopus.value++

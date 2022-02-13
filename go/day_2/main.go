@@ -2,30 +2,47 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-func main() {
-	data := readData()
+const (
+	part1Solution = "1840243"
+	part2Solution = "1727785422"
+)
 
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+type Input []string
+
+func main() {
+	bench.Config{
+		Filename:      "./bench/results/go/day_2.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() []string {
-	contents, err := os.ReadFile("../../data/day_2.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_2.txt"))
 	if err != nil {
 		panic(err)
 	}
-	return strings.Split(strings.TrimSpace(string(contents)), "\n")
+
+	return parseContents(strings.TrimSpace(string(contents)))
 }
 
-func part1(input []string) int {
+func parseContents(contents string) Input {
+	return Input(strings.Split(contents, "\n"))
+}
+
+func (i Input) Part1() string {
 	horizontal := 0
 	depth := 0
-	for _, line := range input {
+	for _, line := range i {
 		var instruction string
 		var num int
 		_, err := fmt.Sscan(line, &instruction, &num)
@@ -44,14 +61,14 @@ func part1(input []string) int {
 			panic("unknown instruction: " + instruction)
 		}
 	}
-	return horizontal * depth
+	return fmt.Sprint(horizontal * depth)
 }
 
-func part2(input []string) int {
+func (i Input) Part2() string {
 	horizontal := 0
 	depth := 0
 	aim := 0
-	for _, line := range input {
+	for _, line := range i {
 		var instruction string
 		var num int
 		_, err := fmt.Sscan(line, &instruction, &num)
@@ -71,5 +88,5 @@ func part2(input []string) int {
 			panic("unknown instruction: " + instruction)
 		}
 	}
-	return horizontal * depth
+	return fmt.Sprint(horizontal * depth)
 }

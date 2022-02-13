@@ -1,21 +1,34 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-func main() {
-	data := readData()
+const (
+	part1Solution = "266301"
+	part2Solution = "3404870164"
+)
 
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+type Input []string
+
+func main() {
+	bench.Config{
+		Filename:      "./bench/results/go/day_10.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() []string {
-	contents, err := os.ReadFile("../../data/day_10.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_10.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -23,13 +36,13 @@ func readData() []string {
 	return parseContents(string(contents))
 }
 
-func parseContents(contents string) []string {
+func parseContents(contents string) Input {
 	return strings.Split(contents, "\n")
 }
 
-func part1(input []string) int {
+func (i Input) Part1() string {
 	score := 0
-	for _, line := range input {
+	for _, line := range i {
 		_, illegal := fixLine(line)
 		if illegal == 0 {
 			continue
@@ -45,12 +58,12 @@ func part1(input []string) int {
 			score += 25137
 		}
 	}
-	return score
+	return fmt.Sprint(score)
 }
 
-func part2(input []string) int {
-	fixScores := make([]int, 0, len(input))
-	for _, line := range input {
+func (i Input) Part2() string {
+	fixScores := make([]int, 0, len(i))
+	for _, line := range i {
 		fix, illegal := fixLine(line)
 		if illegal != 0 {
 			continue
@@ -75,7 +88,7 @@ func part2(input []string) int {
 	}
 
 	sort.Ints(fixScores)
-	return fixScores[len(fixScores)/2]
+	return fmt.Sprint(fixScores[len(fixScores)/2])
 }
 
 func fixLine(line string) (string, byte) {

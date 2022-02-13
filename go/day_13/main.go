@@ -3,12 +3,19 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-type input struct {
+const (
+	part1Solution = "669"
+	part2Solution = "uefzcucj"
+)
+
+type Input struct {
 	points map[point]struct{}
 	folds  []point
 }
@@ -19,14 +26,17 @@ type point struct {
 }
 
 func main() {
-	data := readData()
-
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+	bench.Config{
+		Filename:      "./bench/results/go/day_13.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() input {
-	contents, err := os.ReadFile("../../data/day_13.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_13.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -34,7 +44,7 @@ func readData() input {
 	return parseContents(string(contents))
 }
 
-func parseContents(contents string) input {
+func parseContents(contents string) Input {
 	sections := strings.SplitN(strings.TrimSpace(contents), "\n\n", 2)
 
 	pointLines := strings.Split(sections[0], "\n")
@@ -68,45 +78,45 @@ func parseContents(contents string) input {
 		}
 	}
 
-	return input{
+	return Input{
 		points: points,
 		folds:  folds,
 	}
 }
 
-func part1(input input) int {
-	fold := input.folds[0]
-	for p := range input.points {
+func (i Input) Part1() string {
+	fold := i.folds[0]
+	for p := range i.points {
 		if p.x < fold.x || p.y < fold.y {
 			continue
 		}
-		delete(input.points, p)
+		delete(i.points, p)
 		if fold.x > 0 {
-			input.points[point{x: (2 * fold.x) - p.x, y: p.y}] = struct{}{}
+			i.points[point{x: (2 * fold.x) - p.x, y: p.y}] = struct{}{}
 			continue
 		}
-		input.points[point{x: p.x, y: (2 * fold.y) - p.y}] = struct{}{}
+		i.points[point{x: p.x, y: (2 * fold.y) - p.y}] = struct{}{}
 	}
-	return len(input.points)
+	return fmt.Sprint(len(i.points))
 }
 
-func part2(input input) string {
-	for _, fold := range input.folds {
-		for p := range input.points {
+func (i Input) Part2() string {
+	for _, fold := range i.folds {
+		for p := range i.points {
 			if p.x < fold.x || p.y < fold.y {
 				continue
 			}
-			delete(input.points, p)
+			delete(i.points, p)
 			if fold.x > 0 {
-				input.points[point{x: (2 * fold.x) - p.x, y: p.y}] = struct{}{}
+				i.points[point{x: (2 * fold.x) - p.x, y: p.y}] = struct{}{}
 				continue
 			}
-			input.points[point{x: p.x, y: (2 * fold.y) - p.y}] = struct{}{}
+			i.points[point{x: p.x, y: (2 * fold.y) - p.y}] = struct{}{}
 		}
 	}
 
 	max := point{x: 0, y: 0}
-	for p := range input.points {
+	for p := range i.points {
 		if p.x > max.x {
 			max.x = p.x
 		}
@@ -125,7 +135,7 @@ func part2(input input) string {
 		}
 		display[idx] = char
 	}
-	for p := range input.points {
+	for p := range i.points {
 		display[p.x/5][p.y][p.x%5] = '#'
 	}
 

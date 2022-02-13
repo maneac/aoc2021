@@ -12,16 +12,10 @@ import * as day from "./main.ts";
 const part1Solution = 284;
 const part2Solution = 973499;
 
-Deno.test("part 1 real", () => {
+Deno.test("read data actual", () => {
   const input = day.readData();
 
-  assertEquals(day.part1(input), part1Solution);
-});
-
-Deno.test("part 2 real", () => {
-  const input = day.readData();
-
-  assertEquals(day.part2(input), part2Solution);
+  assertNotEquals(input, []);
 });
 
 Deno.test("parse contents example 1", () => {
@@ -59,6 +53,12 @@ Deno.test("part 1 example 2", () => {
   assertEquals(day.part1(input), 26);
 });
 
+Deno.test("part 1 actual", () => {
+  const input = day.readData();
+
+  assertEquals(day.part1(input), part1Solution);
+});
+
 Deno.test("part 2 example 1", () => {
   const input = example1Data();
 
@@ -71,143 +71,153 @@ Deno.test("part 2 example 2", () => {
   assertEquals(day.part2(input), 61229);
 });
 
-const example1Data = () => [
-  new day.Display().fromComponents([
-    "acedgfb",
-    "cdfbe",
-    "gcdfa",
-    "fbcad",
-    "dab",
-    "cefabd",
-    "cdfgeb",
-    "eafb",
-    "cagedb",
-    "ab",
-  ], ["cdfeb", "fcadb", "cdfeb", "cdbaf"]),
-];
+Deno.test("part 2 actual", () => {
+  const input = day.readData();
 
-const example2Data = () => [
-  new day.Display().fromComponents([
-    "be",
-    "cfbegad",
-    "cbdgef",
-    "fgaecd",
-    "cgeb",
-    "fdcge",
-    "agebfd",
-    "fecdb",
-    "fabcd",
-    "edb",
-  ], ["fdgacbe", "cefdb", "cefbgd", "gcbe"]),
-  new day.Display().fromComponents([
-    "edbfga",
-    "begcd",
-    "cbg",
-    "gc",
-    "gcadebf",
-    "fbgde",
-    "acbgfd",
-    "abcde",
-    "gfcbed",
-    "gfec",
-  ], ["fcgedb", "cgb", "dgebacf", "gc"]),
-  new day.Display().fromComponents([
-    "fgaebd",
-    "cg",
-    "bdaec",
-    "gdafb",
-    "agbcfd",
-    "gdcbef",
-    "bgcad",
-    "gfac",
-    "gcb",
-    "cdgabef",
-  ], ["cg", "cg", "fdcagb", "cbg"]),
-  new day.Display().fromComponents([
-    "fbegcd",
-    "cbd",
-    "adcefb",
-    "dageb",
-    "afcb",
-    "bc",
-    "aefdc",
-    "ecdab",
-    "fgdeca",
-    "fcdbega",
-  ], ["efabcd", "cedba", "gadfec", "cb"]),
-  new day.Display().fromComponents([
-    "aecbfdg",
-    "fbg",
-    "gf",
-    "bafeg",
-    "dbefa",
-    "fcge",
-    "gcbea",
-    "fcaegb",
-    "dgceab",
-    "fcbdga",
-  ], ["gecf", "egdcabf", "bgf", "bfgea"]),
-  new day.Display().fromComponents([
-    "fgeab",
-    "ca",
-    "afcebg",
-    "bdacfeg",
-    "cfaedg",
-    "gcfdb",
-    "baec",
-    "bfadeg",
-    "bafgc",
-    "acf",
-  ], ["gebdcfa", "ecba", "ca", "fadegcb"]),
-  new day.Display().fromComponents([
-    "dbcfg",
-    "fgd",
-    "bdegcaf",
-    "fgec",
-    "aegbdf",
-    "ecdfab",
-    "fbedc",
-    "dacgb",
-    "gdcebf",
-    "gf",
-  ], ["cefg", "dcbef", "fcge", "gbcadfe"]),
-  new day.Display().fromComponents([
-    "bdfegc",
-    "cbegaf",
-    "gecbf",
-    "dfcage",
-    "bdacg",
-    "ed",
-    "bedf",
-    "ced",
-    "adcbefg",
-    "gebcd",
-  ], ["ed", "bcgafe", "cdgba", "cbgef"]),
-  new day.Display().fromComponents([
-    "egadfb",
-    "cdbfeg",
-    "cegd",
-    "fecab",
-    "cgb",
-    "gbdefca",
-    "cg",
-    "fgcdab",
-    "egfdb",
-    "bfceg",
-  ], ["gbdfcae", "bgc", "cg", "cgb"]),
-  new day.Display().fromComponents([
-    "gcafb",
-    "gcf",
-    "dcaebfg",
-    "ecagb",
-    "gf",
-    "abcdeg",
-    "gaef",
-    "cafbge",
-    "fdbac",
-    "fegbdc",
-  ], ["fgae", "cfgab", "fg", "bagce"]),
-];
+  assertEquals(day.part2(input), part2Solution);
+});
+
+function example1Data(): day.Input {
+  return [
+    new day.Display().fromComponents([
+      "acedgfb",
+      "cdfbe",
+      "gcdfa",
+      "fbcad",
+      "dab",
+      "cefabd",
+      "cdfgeb",
+      "eafb",
+      "cagedb",
+      "ab",
+    ], ["cdfeb", "fcadb", "cdfeb", "cdbaf"]),
+  ];
+}
+
+function example2Data(): day.Input {
+  return [
+    new day.Display().fromComponents([
+      "be",
+      "cfbegad",
+      "cbdgef",
+      "fgaecd",
+      "cgeb",
+      "fdcge",
+      "agebfd",
+      "fecdb",
+      "fabcd",
+      "edb",
+    ], ["fdgacbe", "cefdb", "cefbgd", "gcbe"]),
+    new day.Display().fromComponents([
+      "edbfga",
+      "begcd",
+      "cbg",
+      "gc",
+      "gcadebf",
+      "fbgde",
+      "acbgfd",
+      "abcde",
+      "gfcbed",
+      "gfec",
+    ], ["fcgedb", "cgb", "dgebacf", "gc"]),
+    new day.Display().fromComponents([
+      "fgaebd",
+      "cg",
+      "bdaec",
+      "gdafb",
+      "agbcfd",
+      "gdcbef",
+      "bgcad",
+      "gfac",
+      "gcb",
+      "cdgabef",
+    ], ["cg", "cg", "fdcagb", "cbg"]),
+    new day.Display().fromComponents([
+      "fbegcd",
+      "cbd",
+      "adcefb",
+      "dageb",
+      "afcb",
+      "bc",
+      "aefdc",
+      "ecdab",
+      "fgdeca",
+      "fcdbega",
+    ], ["efabcd", "cedba", "gadfec", "cb"]),
+    new day.Display().fromComponents([
+      "aecbfdg",
+      "fbg",
+      "gf",
+      "bafeg",
+      "dbefa",
+      "fcge",
+      "gcbea",
+      "fcaegb",
+      "dgceab",
+      "fcbdga",
+    ], ["gecf", "egdcabf", "bgf", "bfgea"]),
+    new day.Display().fromComponents([
+      "fgeab",
+      "ca",
+      "afcebg",
+      "bdacfeg",
+      "cfaedg",
+      "gcfdb",
+      "baec",
+      "bfadeg",
+      "bafgc",
+      "acf",
+    ], ["gebdcfa", "ecba", "ca", "fadegcb"]),
+    new day.Display().fromComponents([
+      "dbcfg",
+      "fgd",
+      "bdegcaf",
+      "fgec",
+      "aegbdf",
+      "ecdfab",
+      "fbedc",
+      "dacgb",
+      "gdcebf",
+      "gf",
+    ], ["cefg", "dcbef", "fcge", "gbcadfe"]),
+    new day.Display().fromComponents([
+      "bdfegc",
+      "cbegaf",
+      "gecbf",
+      "dfcage",
+      "bdacg",
+      "ed",
+      "bedf",
+      "ced",
+      "adcbefg",
+      "gebcd",
+    ], ["ed", "bcgafe", "cdgba", "cbgef"]),
+    new day.Display().fromComponents([
+      "egadfb",
+      "cdbfeg",
+      "cegd",
+      "fecab",
+      "cgb",
+      "gbdefca",
+      "cg",
+      "fgcdab",
+      "egfdb",
+      "bfceg",
+    ], ["gbdfcae", "bgc", "cg", "cgb"]),
+    new day.Display().fromComponents([
+      "gcafb",
+      "gcf",
+      "dcaebfg",
+      "ecagb",
+      "gf",
+      "abcdeg",
+      "gaef",
+      "cafbge",
+      "fdbac",
+      "fegbdc",
+    ], ["fgae", "cfgab", "fg", "bagce"]),
+  ];
+}
 
 bench({
   name: "read data",

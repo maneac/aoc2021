@@ -2,31 +2,57 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-func main() {
-	data := readData()
+const (
+	part1Solution = "3148794"
+	part2Solution = "2795310"
+)
 
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+type Input treeNode
+
+func main() {
+	bench.Config{
+		Filename:      "./bench/results/go/day_3.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() *treeNode {
-	contents, err := os.ReadFile("../../data/day_3.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_3.txt"))
 	if err != nil {
 		panic(err)
 	}
 
-	tree := parseContents(string(contents))
-	tree.balance()
+	tree := parseContents(strings.TrimSpace(string(contents)))
+	(*treeNode)(&tree).balance()
 	return tree
 }
 
-func part1(input *treeNode) int {
-	thisLayer := []*treeNode{input.children[0], input.children[1]}
+func parseContents(contents string) Input {
+	t := treeNode{}
+	for _, line := range strings.Split(contents, "\n") {
+		val := 0
+		for idx, chr := range strings.TrimSpace(line) {
+			if chr == '1' {
+				val |= 1 << (len(line) - idx - 1)
+			}
+		}
+		t.add(uint(val), len(line)-1)
+	}
+	return Input(t)
+}
+
+func (i Input) Part1() string {
+	thisLayer := []*treeNode{i.children[0], i.children[1]}
 	nextLayer := make([]*treeNode, 0, len(thisLayer)<<1)
 
 	gammaRate := 0
@@ -70,11 +96,11 @@ func part1(input *treeNode) int {
 		}
 	}
 
-	return gammaRate * epsilonRate
+	return fmt.Sprint(gammaRate * epsilonRate)
 }
 
-func part2(input *treeNode) int {
-	oxygenRating := input
+func (i Input) Part2() string {
+	oxygenRating := (*treeNode)(&i)
 	for oxygenRating.childCount > 0 {
 		if oxygenRating.children[1] != nil {
 			oxygenRating = oxygenRating.children[1]
@@ -83,7 +109,7 @@ func part2(input *treeNode) int {
 		}
 	}
 
-	scrubberRating := input
+	scrubberRating := (*treeNode)(&i)
 	for scrubberRating.childCount > 0 {
 		if scrubberRating.children[0] != nil {
 			scrubberRating = scrubberRating.children[0]
@@ -92,27 +118,13 @@ func part2(input *treeNode) int {
 		}
 	}
 
-	return int(oxygenRating.value * scrubberRating.value)
+	return fmt.Sprint(oxygenRating.value * scrubberRating.value)
 }
 
 type treeNode struct {
 	childCount int
 	value      uint
 	children   [2]*treeNode
-}
-
-func parseContents(contents string) *treeNode {
-	t := &treeNode{}
-	for _, line := range strings.Split(strings.TrimSpace(contents), "\n") {
-		val := 0
-		for idx, chr := range strings.TrimSpace(line) {
-			if chr == '1' {
-				val |= 1 << (len(line) - idx - 1)
-			}
-		}
-		t.add(uint(val), len(line)-1)
-	}
-	return t
 }
 
 func (t *treeNode) balance() {

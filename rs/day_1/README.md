@@ -52,8 +52,8 @@ Considering every single measurement isn't as useful as you expected: there's ju
 
 Instead, consider sums of a **three-measurement sliding window**.  Again considering the above example:
 
-<pre><code>199  A      
-200  A B    
+<pre><code>199  A
+200  A B
 208  A B C  
 210    B C D
 200  E   C D

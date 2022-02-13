@@ -1,0 +1,34 @@
+[package]
+name = "benchrs"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = "1.5.4"
+day_1 = { path = "../../../rs/day_1" }
+day_2 = { path = "../../../rs/day_2" }
+day_3 = { path = "../../../rs/day_3" }
+day_4 = { path = "../../../rs/day_4" }
+day_5 = { path = "../../../rs/day_5" }
+day_6 = { path = "../../../rs/day_6" }
+day_7 = { path = "../../../rs/day_7" }
+day_8 = { path = "../../../rs/day_8" }
+day_9 = { path = "../../../rs/day_9" }
+day_10 = { path = "../../../rs/day_10" }
+day_11 = { path = "../../../rs/day_11" }
+day_12 = { path = "../../../rs/day_12" }
+day_13 = { path = "../../../rs/day_13" }
+day_14 = { path = "../../../rs/day_14" }
+day_15 = { path = "../../../rs/day_15" }
+day_16 = { path = "../../../rs/day_16" }
+day_17 = { path = "../../../rs/day_17" }
+# day_18 = { path = "../../../rs/day_18" }
+day_19 = { path = "../../../rs/day_19" }
+day_20 = { path = "../../../rs/day_20" }
+day_21 = { path = "../../../rs/day_21" }
+# day_22 = { path = "../../../rs/day_22" }
+# day_23 = { path = "../../../rs/day_23" }
+# day_24 = { path = "../../../rs/day_24" }
+day_25 = { path = "../../../rs/day_25" }

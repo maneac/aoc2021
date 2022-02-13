@@ -2,12 +2,19 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-type vectors [][2]point
+const (
+	part1Solution = "5608"
+	part2Solution = "20299"
+)
+
+type Input [][2]point
 
 type point struct {
 	x int
@@ -17,14 +24,17 @@ type point struct {
 type points map[point]int
 
 func main() {
-	data := readData()
-
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+	bench.Config{
+		Filename:      "./bench/results/go/day_5.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() vectors {
-	contents, err := os.ReadFile("../../data/day_5.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_5.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -32,10 +42,10 @@ func readData() vectors {
 	return parseContents(string(contents))
 }
 
-func parseContents(contents string) vectors {
+func parseContents(contents string) Input {
 	lines := strings.Split(strings.TrimSpace(contents), "\n")
 
-	output := make(vectors, len(lines))
+	output := make(Input, len(lines))
 	for idx, line := range lines {
 		var from, to point
 		_, err := fmt.Sscanf(line, "%d,%d -> %d,%d", &from.x, &from.y, &to.x, &to.y)
@@ -47,10 +57,10 @@ func parseContents(contents string) vectors {
 	return output
 }
 
-func part1(input vectors) int {
+func (i Input) Part1() string {
 	points := points{}
 
-	for _, v := range input {
+	for _, v := range i {
 		minX := v[0].x
 		maxX := v[1].x
 		if minX > maxX {
@@ -80,13 +90,13 @@ func part1(input vectors) int {
 		}
 	}
 
-	return overlaps
+	return fmt.Sprint(overlaps)
 }
 
-func part2(input vectors) int {
+func (i Input) Part2() string {
 	points := points{}
 
-	for _, v := range input {
+	for _, v := range i {
 		minX := v[0].x
 		maxX := v[1].x
 		xDiff := maxX - minX
@@ -137,7 +147,7 @@ func part2(input vectors) int {
 		}
 	}
 
-	return overlaps
+	return fmt.Sprint(overlaps)
 }
 
 func (points points) String() string {

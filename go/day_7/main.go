@@ -1,22 +1,35 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-func main() {
-	data := readData()
+const (
+	part1Solution = "340056"
+	part2Solution = "96592275"
+)
 
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+type Input []int
+
+func main() {
+	bench.Config{
+		Filename:      "./bench/results/go/day_7.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() []int {
-	contents, err := os.ReadFile("../../data/day_7.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_7.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -24,9 +37,9 @@ func readData() []int {
 	return parseContents(string(contents))
 }
 
-func parseContents(contents string) []int {
+func parseContents(contents string) Input {
 	nums := strings.Split(strings.TrimSpace(contents), ",")
-	out := make([]int, len(nums))
+	out := make(Input, len(nums))
 	for i, num := range nums {
 		n, err := strconv.Atoi(num)
 		if err != nil {
@@ -38,25 +51,25 @@ func parseContents(contents string) []int {
 	return out
 }
 
-func part1(input []int) int {
-	target := input[len(input)/2]
+func (i Input) Part1() string {
+	target := i[len(i)/2]
 
 	total := 0
-	for _, crab := range input {
+	for _, crab := range i {
 		if crab < target {
 			total += target - crab
 		} else {
 			total += crab - target
 		}
 	}
-	return total
+	return fmt.Sprint(total)
 }
 
-func part2(input []int) int {
+func (i Input) Part2() string {
 	total := -1
-	for target := 0; target < input[len(input)-1]; target++ {
+	for target := 0; target < i[len(i)-1]; target++ {
 		subtotal := 0
-		for _, crab := range input {
+		for _, crab := range i {
 			diff := crab - target
 			if crab < target {
 				diff = target - crab
@@ -67,5 +80,5 @@ func part2(input []int) int {
 			total = subtotal
 		}
 	}
-	return total
+	return fmt.Sprint(total)
 }

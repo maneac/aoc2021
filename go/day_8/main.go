@@ -1,11 +1,21 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"math/bits"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
+
+const (
+	part1Solution = "284"
+	part2Solution = "973499"
+)
+
+type Input []display
 
 var nums = map[uint8]int{
 	0b1110111: 0,
@@ -26,14 +36,17 @@ type display struct {
 }
 
 func main() {
-	data := readData()
-
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+	bench.Config{
+		Filename:      "./bench/results/go/day_8.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() []display {
-	contents, err := os.ReadFile("../../data/day_8.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_8.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -41,9 +54,9 @@ func readData() []display {
 	return parseContents(string(contents))
 }
 
-func parseContents(contents string) []display {
+func parseContents(contents string) Input {
 	lines := strings.Split(strings.TrimSpace(contents), "\n")
-	displays := make([]display, 0, len(lines))
+	displays := make(Input, 0, len(lines))
 
 	for _, line := range lines {
 		lineParts := strings.Split(line, " | ")
@@ -73,9 +86,9 @@ func parseContents(contents string) []display {
 	return displays
 }
 
-func part1(input []display) int {
+func (i Input) Part1() string {
 	total := 0
-	for _, display := range input {
+	for _, display := range i {
 		for _, v := range display.value {
 			switch bits.OnesCount8(v) {
 			case 2, 3, 4, 7:
@@ -83,12 +96,12 @@ func part1(input []display) int {
 			}
 		}
 	}
-	return total
+	return fmt.Sprint(total)
 }
 
-func part2(input []display) int {
+func (i Input) Part2() string {
 	total := 0
-	for _, display := range input {
+	for _, display := range i {
 		one := find(display.digits[:], func(u uint8) bool { return bits.OnesCount8(u) == 2 })
 		seven := find(display.digits[:], func(u uint8) bool { return bits.OnesCount8(u) == 3 })
 		four := find(display.digits[:], func(u uint8) bool { return bits.OnesCount8(u) == 4 })
@@ -162,7 +175,7 @@ func part2(input []display) int {
 			total += n
 		}
 	}
-	return total
+	return fmt.Sprint(total)
 }
 
 func find(in []uint8, filter func(uint8) bool) uint8 {
