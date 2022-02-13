@@ -1,31 +1,35 @@
-const readData = (): Display[] =>
-  parseContents(Deno.readTextFileSync("./data/day_8.txt").trim());
+export type Input = Display[];
 
-const parseContents = (contents: string): Display[] =>
-  contents.split("\n").map((line) => new Display().fromString(line)).reduce(
-    (acc, d) => {
-      acc.push(d);
-      return acc;
-    },
-    [] as Display[],
-  );
+export function readData(): Input {
+  const contents = Deno.readTextFileSync("./data/day_8.txt").trim();
 
-const part1 = (data: Display[]): number =>
-  data.map((display) =>
+  return parseContents(contents);
+}
+
+export function parseContents(contents: string): Input {
+  return contents.split("\n").map((line) => new Display().fromString(line))
+    .reduce(
+      (acc, d) => {
+        acc.push(d);
+        return acc;
+      },
+      [] as Input,
+    );
+}
+
+export function part1(data: Input): number {
+  return data.map((display) =>
     display.value.filter((v) =>
       v.length == 2 || v.length == 3 || v.length == 4 || v.length == 7
     )
       .length
   ).reduce((acc, cur) => acc + cur);
+}
 
-const part2 = (data: Display[]): number =>
-  data.map((display) => display.decode()).reduce((acc, cur) => acc + cur);
-
-function main() {
-  const data = readData();
-
-  console.log("Part 1: ", part1(data));
-  console.log("Part 2: ", part2(data));
+export function part2(data: Input): number {
+  return data.map((display) => display.decode()).reduce((acc, cur) =>
+    acc + cur
+  );
 }
 
 const NUMS: Record<string, number> = {
@@ -41,7 +45,7 @@ const NUMS: Record<string, number> = {
   "abcdfg": 9,
 };
 
-type digits = [
+type Digits = [
   string,
   string,
   string,
@@ -54,11 +58,11 @@ type digits = [
   string,
 ];
 
-type values = [string, string, string, string];
+type Values = [string, string, string, string];
 
-class Display {
-  digits: digits;
-  value: values;
+export class Display {
+  digits: Digits;
+  value: Values;
 
   constructor() {
     this.digits = ["", "", "", "", "", "", "", "", "", ""];
@@ -72,7 +76,7 @@ class Display {
     return this;
   }
 
-  fromComponents(digits: digits, value: values): Display {
+  fromComponents(digits: Digits, value: Values): Display {
     this.digits = digits;
     this.value = value;
     return this;
@@ -141,5 +145,9 @@ class Display {
   }
 }
 
-export { main, parseContents, part1, part2, readData };
-export { Display };
+export function main() {
+  const data = readData();
+
+  console.log("Part 1: ", part1(data));
+  console.log("Part 2: ", part2(data));
+}

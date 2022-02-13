@@ -1,12 +1,20 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-type input struct {
+const (
+	part1Solution = "2584"
+	part2Solution = "3816397135460"
+)
+
+type Input struct {
 	first      int
 	last       int
 	initial    map[int]int
@@ -14,14 +22,17 @@ type input struct {
 }
 
 func main() {
-	data := readData()
-
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+	bench.Config{
+		Filename:      "./bench/results/go/day_14.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() input {
-	contents, err := os.ReadFile("../../data/day_14.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_14.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +40,7 @@ func readData() input {
 	return parseContents(string(contents))
 }
 
-func parseContents(contents string) input {
+func parseContents(contents string) Input {
 	parts := strings.Split(strings.TrimSpace(contents), "\n\n")
 
 	initial := make(map[int]int, len(parts[0])-1)
@@ -42,7 +53,7 @@ func parseContents(contents string) input {
 		insertions[int(line[0])<<8|int(line[1])] = int(line[len(line)-1])
 	}
 
-	return input{
+	return Input{
 		first:      int(parts[0][0] - 'A'),
 		last:       int(parts[0][len(parts[0])-1] - 'A'),
 		initial:    initial,
@@ -50,15 +61,15 @@ func parseContents(contents string) input {
 	}
 }
 
-func part1(input input) int {
-	return input.polymerise(10)
+func (i Input) Part1() string {
+	return fmt.Sprint(i.polymerise(10))
 }
 
-func part2(input input) int {
-	return input.polymerise(40)
+func (i Input) Part2() string {
+	return fmt.Sprint(i.polymerise(40))
 }
 
-func (i input) polymerise(iterations int) int {
+func (i Input) polymerise(iterations int) int {
 	polymer := i.initial
 	newPolymer := make(map[int]int, len(i.initial))
 

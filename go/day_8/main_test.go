@@ -5,75 +5,10 @@ import (
 	"testing"
 )
 
-const (
-	part1Solution = 284
-	part2Solution = 973499
-)
-
-func TestPart1(t *testing.T) {
-	tests := map[string]struct {
-		data     []display
-		expected int
-	}{
-		"example1": {
-			data:     example1Data(),
-			expected: 0,
-		},
-		"example2": {
-			data:     example2Data(),
-			expected: 26,
-		},
-		"actual": {
-			data:     readData(),
-			expected: part1Solution,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			actual := part1(test.data)
-
-			if actual != test.expected {
-				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
-			}
-		})
-	}
-}
-
-func TestPart2(t *testing.T) {
-	tests := map[string]struct {
-		data     []display
-		expected int
-	}{
-		"example1": {
-			data:     example1Data(),
-			expected: 5353,
-		},
-		"example2": {
-			data:     example2Data(),
-			expected: 61229,
-		},
-		"actual": {
-			data:     readData(),
-			expected: part2Solution,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			actual := part2(test.data)
-
-			if actual != test.expected {
-				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
-			}
-		})
-	}
-}
-
 func TestParseContents(t *testing.T) {
 	tests := map[string]struct {
 		data     string
-		expected []display
+		expected Input
 	}{
 		"example1": {
 			data:     "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf",
@@ -105,8 +40,68 @@ gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 	}
 }
 
-func example1Data() []display {
-	return []display{
+func TestPart1(t *testing.T) {
+	tests := map[string]struct {
+		data     Input
+		expected string
+	}{
+		"example1": {
+			data:     example1Data(),
+			expected: "0",
+		},
+		"example2": {
+			data:     example2Data(),
+			expected: "26",
+		},
+		"actual": {
+			data:     readData("../../data"),
+			expected: part1Solution,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := test.data.Part1()
+
+			if actual != test.expected {
+				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
+			}
+		})
+	}
+}
+
+func TestPart2(t *testing.T) {
+	tests := map[string]struct {
+		data     Input
+		expected string
+	}{
+		"example1": {
+			data:     example1Data(),
+			expected: "5353",
+		},
+		"example2": {
+			data:     example2Data(),
+			expected: "61229",
+		},
+		"actual": {
+			data:     readData("../../data"),
+			expected: part2Solution,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := test.data.Part2()
+
+			if actual != test.expected {
+				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
+			}
+		})
+	}
+}
+
+func example1Data() Input {
+	return Input{
 		{
 			digits: [10]uint8{
 				0b1111111,
@@ -130,8 +125,8 @@ func example1Data() []display {
 	}
 }
 
-func example2Data() []display {
-	return []display{
+func example2Data() Input {
+	return Input{
 		{
 			digits: [10]uint8{
 				0b0010010,
@@ -337,25 +332,25 @@ func example2Data() []display {
 
 func BenchmarkReadData(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		if readData() == nil {
+		if readData("../../data") == nil {
 			b.FailNow()
 		}
 	}
 }
 
 func BenchmarkPart1(b *testing.B) {
-	data := readData()
+	data := readData("../../data")
 	for i := 0; i < b.N; i++ {
-		if part1(data) != part1Solution {
+		if data.Part1() != part1Solution {
 			b.FailNow()
 		}
 	}
 }
 
 func BenchmarkPart2(b *testing.B) {
-	data := readData()
+	data := readData("../../data")
 	for i := 0; i < b.N; i++ {
-		if part2(data) != part2Solution {
+		if data.Part2() != part2Solution {
 			b.FailNow()
 		}
 	}

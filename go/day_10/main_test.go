@@ -5,67 +5,10 @@ import (
 	"testing"
 )
 
-const (
-	part1Solution = 266301
-	part2Solution = 3404870164
-)
-
-func TestPart1(t *testing.T) {
-	tests := map[string]struct {
-		data     []string
-		expected int
-	}{
-		"example": {
-			data:     exampleData(),
-			expected: 26397,
-		},
-		"actual": {
-			data:     readData(),
-			expected: part1Solution,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			actual := part1(test.data)
-
-			if actual != test.expected {
-				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
-			}
-		})
-	}
-}
-
-func TestPart2(t *testing.T) {
-	tests := map[string]struct {
-		data     []string
-		expected int
-	}{
-		"example": {
-			data:     exampleData(),
-			expected: 288957,
-		},
-		"actual": {
-			data:     readData(),
-			expected: part2Solution,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			actual := part2(test.data)
-
-			if actual != test.expected {
-				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
-			}
-		})
-	}
-}
-
 func TestParseContents(t *testing.T) {
 	tests := map[string]struct {
 		data     string
-		expected []string
+		expected Input
 	}{
 		"example": {
 			data: `[({(<(())[]>[[{[]{<()<>>
@@ -93,8 +36,60 @@ func TestParseContents(t *testing.T) {
 	}
 }
 
-func exampleData() []string {
-	return []string{
+func TestPart1(t *testing.T) {
+	tests := map[string]struct {
+		data     Input
+		expected string
+	}{
+		"example": {
+			data:     exampleData(),
+			expected: "26397",
+		},
+		"actual": {
+			data:     readData("../../data"),
+			expected: part1Solution,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := test.data.Part1()
+
+			if actual != test.expected {
+				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
+			}
+		})
+	}
+}
+
+func TestPart2(t *testing.T) {
+	tests := map[string]struct {
+		data     Input
+		expected string
+	}{
+		"example": {
+			data:     exampleData(),
+			expected: "288957",
+		},
+		"actual": {
+			data:     readData("../../data"),
+			expected: part2Solution,
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			actual := test.data.Part2()
+
+			if actual != test.expected {
+				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
+			}
+		})
+	}
+}
+
+func exampleData() Input {
+	return Input{
 		"[({(<(())[]>[[{[]{<()<>>",
 		"[(()[<>])]({[<{<<[]>>(",
 		"{([(<{}[<>[]}>{[]{[(<()>",
@@ -110,25 +105,25 @@ func exampleData() []string {
 
 func BenchmarkReadData(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		if readData() == nil {
+		if readData("../../data") == nil {
 			b.FailNow()
 		}
 	}
 }
 
 func BenchmarkPart1(b *testing.B) {
-	data := readData()
+	data := readData("../../data")
 	for i := 0; i < b.N; i++ {
-		if part1(data) != part1Solution {
+		if data.Part1() != part1Solution {
 			b.FailNow()
 		}
 	}
 }
 
 func BenchmarkPart2(b *testing.B) {
-	data := readData()
+	data := readData("../../data")
 	for i := 0; i < b.N; i++ {
-		if part2(data) != part2Solution {
+		if data.Part2() != part2Solution {
 			b.FailNow()
 		}
 	}

@@ -12,29 +12,45 @@ import * as day from "./main.ts";
 const part1Solution = 340056;
 const part2Solution = 96592275;
 
-Deno.test("part 1 real", () => {
+Deno.test("read data actual", () => {
+  const input = day.readData();
+
+  assertNotEquals(input, []);
+});
+
+Deno.test("parse contents example", () => {
+  const input = `16,1,2,0,4,2,7,1,2,14`;
+
+  assertEquals(day.parseContents(input), exampleData());
+});
+
+Deno.test("part 1 example", () => {
+  const input = exampleData();
+
+  assertEquals(day.part1(input), 37);
+});
+
+Deno.test("part 1 actual", () => {
   const input = day.readData();
 
   assertEquals(day.part1(input), part1Solution);
 });
 
-Deno.test("part 2 real", () => {
+Deno.test("part 2 example", () => {
+  const input = exampleData();
+
+  assertEquals(day.part2(input), 168);
+});
+
+Deno.test("part 2 actual", () => {
   const input = day.readData();
 
   assertEquals(day.part2(input), part2Solution);
 });
 
-Deno.test("part 1 example", () => {
-  const input = [0, 1, 1, 2, 2, 2, 4, 7, 14, 16];
-
-  assertEquals(day.part1(input), 37);
-});
-
-Deno.test("part 2 example", () => {
-  const input = [0, 1, 1, 2, 2, 2, 4, 7, 14, 16];
-
-  assertEquals(day.part2(input), 168);
-});
+function exampleData(): day.Input {
+  return [0, 1, 1, 2, 2, 2, 4, 7, 14, 16];
+}
 
 bench({
   name: "read data",

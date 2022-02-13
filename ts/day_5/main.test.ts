@@ -12,19 +12,13 @@ import * as day from "./main.ts";
 const part1Solution = 5608;
 const part2Solution = 20299;
 
-Deno.test("part 1 real", () => {
+Deno.test("read data actual", () => {
   const input = day.readData();
 
-  assertEquals(day.part1(input), part1Solution);
+  assertNotEquals(input, []);
 });
 
-Deno.test("part 2 real", () => {
-  const input = day.readData();
-
-  assertEquals(day.part2(input), part2Solution);
-});
-
-Deno.test("parse contents", () => {
+Deno.test("parse contents example", () => {
   const input = `0,9 -> 5,9
 8,0 -> 0,8
 9,4 -> 3,4
@@ -36,33 +30,44 @@ Deno.test("parse contents", () => {
 0,0 -> 8,8
 5,5 -> 8,2`;
 
-  assertEquals(day.parseContents(input), exampleInput());
+  assertEquals(day.parseContents(input), exampleData());
 });
 
 Deno.test("part 1 example", () => {
-  const input = exampleInput();
+  const input = exampleData();
 
   assertEquals(day.part1(input), 5);
 });
 
+Deno.test("part 1 actual", () => {
+  const input = day.readData();
+
+  assertEquals(day.part1(input), part1Solution);
+});
 Deno.test("part 2 example", () => {
-  const input = exampleInput();
+  const input = exampleData();
 
   assertEquals(day.part2(input), 12);
 });
 
-function exampleInput(): day.Vector[] {
+Deno.test("part 2 actual", () => {
+  const input = day.readData();
+
+  assertEquals(day.part2(input), part2Solution);
+});
+
+function exampleData(): day.Vector[] {
   return [
-    { from: { x: 0, y: 9 }, to: { x: 5, y: 9 } },
-    { from: { x: 8, y: 0 }, to: { x: 0, y: 8 } },
-    { from: { x: 9, y: 4 }, to: { x: 3, y: 4 } },
-    { from: { x: 2, y: 2 }, to: { x: 2, y: 1 } },
-    { from: { x: 7, y: 0 }, to: { x: 7, y: 4 } },
-    { from: { x: 6, y: 4 }, to: { x: 2, y: 0 } },
-    { from: { x: 0, y: 9 }, to: { x: 2, y: 9 } },
-    { from: { x: 3, y: 4 }, to: { x: 1, y: 4 } },
-    { from: { x: 0, y: 0 }, to: { x: 8, y: 8 } },
-    { from: { x: 5, y: 5 }, to: { x: 8, y: 2 } },
+    new day.Vector(new day.Point(0, 9), new day.Point(5, 9)),
+    new day.Vector(new day.Point(8, 0), new day.Point(0, 8)),
+    new day.Vector(new day.Point(9, 4), new day.Point(3, 4)),
+    new day.Vector(new day.Point(2, 2), new day.Point(2, 1)),
+    new day.Vector(new day.Point(7, 0), new day.Point(7, 4)),
+    new day.Vector(new day.Point(6, 4), new day.Point(2, 0)),
+    new day.Vector(new day.Point(0, 9), new day.Point(2, 9)),
+    new day.Vector(new day.Point(3, 4), new day.Point(1, 4)),
+    new day.Vector(new day.Point(0, 0), new day.Point(8, 8)),
+    new day.Vector(new day.Point(5, 5), new day.Point(8, 2)),
   ];
 }
 

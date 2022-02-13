@@ -3,22 +3,32 @@ package main
 import (
 	"container/list"
 	"fmt"
-	"log"
 	"os"
+	"path/filepath"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-type input []*snailfishList
+const (
+	part1Solution = "4469"
+	part2Solution = "4770"
+)
+
+type Input []*snailfishList
 
 func main() {
-	data := readData()
-
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+	bench.Config{
+		Filename:      "./bench/results/go/day_18.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() input {
-	contents, err := os.ReadFile("../../data/day_18.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_18.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -26,7 +36,7 @@ func readData() input {
 	return parseContents(strings.TrimSpace(string(contents)))
 }
 
-func parseContents(contents string) input {
+func parseContents(contents string) Input {
 	lines := strings.Split(contents, "\n")
 
 	out := make([]*snailfishList, 0, len(lines))
@@ -75,26 +85,26 @@ func listFromLine(line string) *snailfishList {
 	return out
 }
 
-func part1(input input) int {
-	return input.reduce().magnitude()
+func (i Input) Part1() string {
+	return fmt.Sprint(i.reduce().magnitude())
 }
 
-func part2(in input) int {
+func (i Input) Part2() string {
 	largest := 0
-	for lidx, left := range in {
-		for ridx, right := range in {
+	for lidx, left := range i {
+		for ridx, right := range i {
 			if ridx == lidx {
 				continue
 			}
-			if magnitude := part1(input{left.duplicate(), right.duplicate()}); magnitude > largest {
+			if magnitude := (Input{left.duplicate(), right.duplicate()}).reduce().magnitude(); magnitude > largest {
 				largest = magnitude
 			}
 		}
 	}
-	return largest
+	return fmt.Sprint(largest)
 }
 
-func (i input) reduce() *snailfishList {
+func (i Input) reduce() *snailfishList {
 	out := i[0]
 	if out == nil {
 		return nil
@@ -111,7 +121,7 @@ func (i input) reduce() *snailfishList {
 	return out
 }
 
-func (i input) String() string {
+func (i Input) String() string {
 	var out strings.Builder
 	out.WriteString("input[\n")
 

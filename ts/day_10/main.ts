@@ -1,14 +1,16 @@
-function readData(): string[] {
+export type Input = string[];
+
+export function readData(): Input {
   const contents = Deno.readTextFileSync("./data/day_10.txt").trim();
 
   return parseContents(contents);
 }
 
-function parseContents(contents: string): string[] {
+export function parseContents(contents: string): Input {
   return contents.split("\n");
 }
 
-function part1(data: string[]): number {
+export function part1(data: Input): number {
   return data.map((line): number => {
     try {
       fixLine(line);
@@ -28,7 +30,7 @@ function part1(data: string[]): number {
   }).reduce((acc, cur) => acc + cur);
 }
 
-function part2(data: string[]): number {
+export function part2(data: Input): number {
   const fixScores = data.map((line) => {
     try {
       const fix = fixLine(line);
@@ -89,11 +91,9 @@ function fixLine(line: string): string {
   return missing;
 }
 
-function main() {
+export function main() {
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
-
-export { main, parseContents, part1, part2, readData };

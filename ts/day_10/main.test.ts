@@ -12,19 +12,13 @@ import * as day from "./main.ts";
 const part1Solution = 266301;
 const part2Solution = 3404870164;
 
-Deno.test("part 1 real", () => {
+Deno.test("read data actual", () => {
   const input = day.readData();
 
-  assertEquals(day.part1(input), part1Solution);
+  assertNotEquals(input, []);
 });
 
-Deno.test("part 2 real", () => {
-  const input = day.readData();
-
-  assertEquals(day.part2(input), part2Solution);
-});
-
-Deno.test("parse contents", () => {
+Deno.test("parse contents example", () => {
   const input = `[({(<(())[]>[[{[]{<()<>>
 [(()[<>])]({[<{<<[]>>(
 {([(<{}[<>[]}>{[]{[(<()>
@@ -45,24 +39,38 @@ Deno.test("part 1 example", () => {
   assertEquals(day.part1(input), 26397);
 });
 
+Deno.test("part 1 actual", () => {
+  const input = day.readData();
+
+  assertEquals(day.part1(input), part1Solution);
+});
+
 Deno.test("part 2 example", () => {
   const input = exampleData();
 
   assertEquals(day.part2(input), 288957);
 });
 
-const exampleData = () => [
-  "[({(<(())[]>[[{[]{<()<>>",
-  "[(()[<>])]({[<{<<[]>>(",
-  "{([(<{}[<>[]}>{[]{[(<()>",
-  "(((({<>}<{<{<>}{[]{[]{}",
-  "[[<[([]))<([[{}[[()]]]",
-  "[{[{({}]{}}([{[{{{}}([]",
-  "{<[[]]>}<{[{[{[]{()[[[]",
-  "[<(<(<(<{}))><([]([]()",
-  "<{([([[(<>()){}]>(<<{{",
-  "<{([{{}}[<[[[<>{}]]]>[]]",
-];
+Deno.test("part 2 actual", () => {
+  const input = day.readData();
+
+  assertEquals(day.part2(input), part2Solution);
+});
+
+function exampleData(): day.Input {
+  return [
+    "[({(<(())[]>[[{[]{<()<>>",
+    "[(()[<>])]({[<{<<[]>>(",
+    "{([(<{}[<>[]}>{[]{[(<()>",
+    "(((({<>}<{<{<>}{[]{[]{}",
+    "[[<[([]))<([[{}[[()]]]",
+    "[{[{({}]{}}([{[{{{}}([]",
+    "{<[[]]>}<{[{[{[]{()[[[]",
+    "[<(<(<(<{}))><([]([]()",
+    "<{([([[(<>()){}]>(<<{{",
+    "<{([{{}}[<[[[<>{}]]]>[]]",
+  ];
+}
 
 bench({
   name: "read data",

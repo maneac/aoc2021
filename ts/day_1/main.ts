@@ -1,10 +1,18 @@
-function readData(): number[] {
-  return Deno.readTextFileSync("./data/day_1.txt").trim().split("\n").map(
+export type Input = number[];
+
+export function readData(): Input {
+  const contents = Deno.readTextFileSync("./data/day_1.txt").trim();
+
+  return parseContents(contents);
+}
+
+export function parseContents(contents: string): Input {
+  return contents.split("\n").map(
     (v) => +v,
   );
 }
 
-function part1(data: number[]): number {
+export function part1(data: Input): number {
   return data.reduce((acc, num, idx, arr) => {
     if (idx == 0) {
       return 0;
@@ -16,7 +24,7 @@ function part1(data: number[]): number {
   }, 0);
 }
 
-function part2(data: number[]): number {
+export function part2(data: Input): number {
   return data.reduce((acc, _, idx, arr) => {
     if (idx < 3) {
       return 0;
@@ -36,11 +44,11 @@ function part2(data: number[]): number {
   }, 0);
 }
 
-function main() {
+export function main() {
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
 
-export { main, part1, part2, readData };
+main();

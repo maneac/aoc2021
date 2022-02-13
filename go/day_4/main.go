@@ -2,26 +2,36 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/maneac/aoc2021/utils/lib/go/bench"
 )
 
-type input struct {
+const (
+	part1Solution = "8580"
+	part2Solution = "9576"
+)
+
+type Input struct {
 	numbers []int
 	boards  [][]int
 }
 
 func main() {
-	data := readData()
-
-	log.Println("Part 1: ", part1(data))
-	log.Println("Part 2: ", part2(data))
+	bench.Config{
+		Filename:      "./bench/results/go/day_4.csv",
+		DataDirectory: "./data",
+		ReadData:      func(p string) bench.Day { return readData(p) },
+		Part1Solution: part1Solution,
+		Part2Solution: part2Solution,
+	}.Run()
 }
 
-func readData() *input {
-	contents, err := os.ReadFile("../../data/day_4.txt")
+func readData(dir string) Input {
+	contents, err := os.ReadFile(filepath.Join(dir, "day_4.txt"))
 	if err != nil {
 		panic(err)
 	}
@@ -29,11 +39,11 @@ func readData() *input {
 	return parseContents(string(contents))
 }
 
-func parseContents(contents string) *input {
+func parseContents(contents string) Input {
 	contentParts := strings.Split(strings.TrimSpace(contents), "\n\n")
 	rawNumbers := strings.Split(contentParts[0], ",")
 
-	i := &input{
+	i := Input{
 		numbers: make([]int, 0, len(rawNumbers)),
 		boards:  make([][]int, 0, len(contentParts)-1),
 	}
@@ -61,9 +71,9 @@ func parseContents(contents string) *input {
 	return i
 }
 
-func part1(input *input) int {
-	for _, num := range input.numbers {
-		for _, board := range input.boards {
+func (i Input) Part1() string {
+	for _, num := range i.numbers {
+		for _, board := range i.boards {
 			for idx, val := range board {
 				if val == num {
 					board[idx] = -1
@@ -102,19 +112,19 @@ func part1(input *input) int {
 					}
 					boardTotal += val
 				}
-				return boardTotal * num
+				return fmt.Sprint(boardTotal * num)
 			}
 		}
 	}
 	panic("no result")
 }
 
-func part2(input *input) int {
-	winningBoards := make([]int, 0, len(input.boards))
-	for _, num := range input.numbers {
+func (i Input) Part2() string {
+	winningBoards := make([]int, 0, len(i.boards))
+	for _, num := range i.numbers {
 		activeBoardCount := 0
 		winningBoards = winningBoards[:0]
-		for boardIdx, board := range input.boards {
+		for boardIdx, board := range i.boards {
 			if board == nil {
 				continue
 			}
@@ -157,17 +167,17 @@ func part2(input *input) int {
 
 		if activeBoardCount == 1 && len(winningBoards) == 1 {
 			boardTotal := 0
-			for _, val := range input.boards[winningBoards[0]] {
+			for _, val := range i.boards[winningBoards[0]] {
 				if val < 0 {
 					continue
 				}
 				boardTotal += val
 			}
-			return boardTotal * num
+			return fmt.Sprint(boardTotal * num)
 		}
 
 		for _, idx := range winningBoards {
-			input.boards[idx] = nil
+			i.boards[idx] = nil
 		}
 	}
 	panic("no result")

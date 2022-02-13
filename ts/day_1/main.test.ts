@@ -12,20 +12,53 @@ import * as day from "./main.ts";
 const part1Solution = 1374;
 const part2Solution = 1418;
 
-Deno.test("part 1 real", () => {
+Deno.test("read data actual", () => {
+  const input = day.readData();
+
+  assertNotEquals(input, []);
+});
+
+Deno.test("parse contents example", () => {
+  const input = `199
+200
+208
+210
+200
+207
+240
+269
+260
+263`;
+
+  assertEquals(day.parseContents(input), exampleData());
+});
+
+Deno.test("part 1 example", () => {
+  const input = exampleData();
+
+  assertEquals(day.part1(input), 7);
+});
+
+Deno.test("part 1 actual", () => {
   const input = day.readData();
 
   assertEquals(day.part1(input), part1Solution);
 });
 
-Deno.test("part 2 real", () => {
+Deno.test("part 2 example", () => {
+  const input = exampleData();
+
+  assertEquals(day.part2(input), 5);
+});
+
+Deno.test("part 2 actual", () => {
   const input = day.readData();
 
   assertEquals(day.part2(input), part2Solution);
 });
 
-Deno.test("part 1 example", () => {
-  const input = [
+function exampleData(): day.Input {
+  return [
     199,
     200,
     208,
@@ -37,26 +70,7 @@ Deno.test("part 1 example", () => {
     260,
     263,
   ];
-
-  assertEquals(day.part1(input), 7);
-});
-
-Deno.test("part 2 example", () => {
-  const input = [
-    199,
-    200,
-    208,
-    210,
-    200,
-    207,
-    240,
-    269,
-    260,
-    263,
-  ];
-
-  assertEquals(day.part2(input), 5);
-});
+}
 
 bench({
   name: "read data",

@@ -36,7 +36,8 @@ presence causes the whole line to be considered corrupted.
 
 For example, consider the following navigation subsystem:
 
-<pre><code>[({(<(())[]>[[{[]{<()<>>
+```text
+[({(<(())[]>[[{[]{<()<>>
 [(()[<>])]({[<{<<[]>>(
 {([(<{}[<>[]}>{[]{[(<()>
 (((({<>}<{<{<>}{[]{[]{}
@@ -46,7 +47,7 @@ For example, consider the following navigation subsystem:
 [<(<(<(<{}))><([]([]()
 <{([([[(<>()){}]>(<<{{
 <{([{{}}[<[[[<>{}]]]>[]]
-</code></pre>
+```
 
 Some of the lines aren't corrupted, just incomplete; you can ignore these lines
 for now. The remaining five lines are corrupted:

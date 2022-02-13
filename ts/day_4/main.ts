@@ -1,16 +1,21 @@
-interface Input {
+export class Input {
   numbers: number[];
   boards: number[][];
+
+  constructor(numbers: number[], boards: number[][]) {
+    this.numbers = numbers;
+    this.boards = boards;
+  }
 }
 
-function readData(): Input {
-  const input = Deno.readTextFileSync("./data/day_4.txt").trim();
+export function readData(): Input {
+  const contents = Deno.readTextFileSync("./data/day_4.txt").trim();
 
-  return parseContents(input);
+  return parseContents(contents);
 }
 
-function parseContents(input: string): Input {
-  const inputParts = input.split("\n\n");
+export function parseContents(contents: string): Input {
+  const inputParts = contents.split("\n\n");
 
   const numbers = inputParts[0].split(",").map((v) => +v);
 
@@ -25,10 +30,10 @@ function parseContents(input: string): Input {
     return boardsArr;
   }, [] as number[][]);
 
-  return { numbers, boards };
+  return new Input(numbers, boards);
 }
 
-function part1(data: Input): number {
+export function part1(data: Input): number {
   for (const num of data.numbers) {
     for (const [boardIdx, board] of data.boards.entries()) {
       const newBoard = board.map((v) => v == num ? -1 : v);
@@ -55,7 +60,7 @@ function part1(data: Input): number {
   throw new Error("no result");
 }
 
-function part2(data: Input): number {
+export function part2(data: Input): number {
   for (const num of data.numbers) {
     data.boards = data.boards.map((board) =>
       board.map((v) => v == num ? -1 : v)
@@ -88,12 +93,9 @@ function part2(data: Input): number {
   throw new Error("no result");
 }
 
-function main() {
+export function main() {
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
-
-export { main, parseContents, part1, part2, readData };
-export type { Input };

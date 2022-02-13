@@ -12,35 +12,45 @@ import * as day from "./main.ts";
 const part1Solution = 360761;
 const part2Solution = 1632779838045;
 
-Deno.test("part 1 real", () => {
+Deno.test("read data actual", () => {
+  const input = day.readData();
+
+  assertNotEquals(input, []);
+});
+
+Deno.test("parse contents example", () => {
+  const input = "3,4,3,1,2";
+
+  assertEquals(day.parseContents(input), exampleData());
+});
+
+Deno.test("part 1 example", () => {
+  const input = exampleData();
+
+  assertEquals(day.part1(input), 5934);
+});
+
+Deno.test("part 1 actual", () => {
   const input = day.readData();
 
   assertEquals(day.part1(input), part1Solution);
 });
 
-Deno.test("part 2 real", () => {
+Deno.test("part 2 example", () => {
+  const input = exampleData();
+
+  assertEquals(day.part2(input), 26984457539);
+});
+
+Deno.test("part 2 actual", () => {
   const input = day.readData();
 
   assertEquals(day.part2(input), part2Solution);
 });
 
-Deno.test("parse contents", () => {
-  const input = "3,4,3,1,2";
-
-  assertEquals(day.parseContents(input), [0, 1, 1, 2, 1, 0, 0, 0, 0]);
-});
-
-Deno.test("part 1 example", () => {
-  const input: day.fish = [0, 1, 1, 2, 1, 0, 0, 0, 0];
-
-  assertEquals(day.part1(input), 5934);
-});
-
-Deno.test("part 2 example", () => {
-  const input: day.fish = [0, 1, 1, 2, 1, 0, 0, 0, 0];
-
-  assertEquals(day.part2(input), 26984457539);
-});
+function exampleData(): day.Input {
+  return [0, 1, 1, 2, 1, 0, 0, 0, 0];
+}
 
 bench({
   name: "read data",

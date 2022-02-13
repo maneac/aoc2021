@@ -1,24 +1,27 @@
-interface Instruction {
-  instruction: string;
-  amount: number;
+export type Input = Instruction[];
+
+export function readData(): Input {
+  const contents = Deno.readTextFileSync("./data/day_2.txt").trim();
+
+  return parseContents(contents);
 }
 
-function readData(): Instruction[] {
-  return Deno.readTextFileSync("./data/day_2.txt").trim().split("\n").map(
+export function parseContents(contents: string): Input {
+  return contents.split("\n").map(
     (line) => {
       const lineParts = line.split(" ");
       if (lineParts.length != 2) {
         throw new Error("invalid line");
       }
-      return {
-        instruction: lineParts[0],
-        amount: Number(lineParts[1]),
-      };
+      return new Instruction(
+        lineParts[0],
+        Number(lineParts[1]),
+      );
     },
   );
 }
 
-function part1(data: Instruction[]): number {
+export function part1(data: Input): number {
   let horizontal = 0;
   let depth = 0;
   for (const line of data) {
@@ -36,7 +39,7 @@ function part1(data: Instruction[]): number {
   return (horizontal * depth);
 }
 
-function part2(data: Instruction[]): number {
+export function part2(data: Input): number {
   let horizontal = 0;
   let aim = 0;
   let depth = 0;
@@ -56,11 +59,19 @@ function part2(data: Instruction[]): number {
   return (horizontal * depth);
 }
 
-function main() {
+export class Instruction {
+  instruction: string;
+  amount: number;
+
+  constructor(instruction: string, amount: number) {
+    this.instruction = instruction;
+    this.amount = amount;
+  }
+}
+
+export function main() {
   const data = readData();
 
   console.log("Part 1: ", part1(data));
   console.log("Part 2: ", part2(data));
 }
-
-export { main, part1, part2, readData };

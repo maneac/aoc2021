@@ -3,4 +3,5 @@
 /.vscode
 /.env
 /vendor
-
+/.utils/analysis
+/bench/results

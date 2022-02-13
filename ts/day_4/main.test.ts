@@ -12,19 +12,13 @@ import * as day from "./main.ts";
 const part1Solution = 8580;
 const part2Solution = 9576;
 
-Deno.test("part 1 real", () => {
+Deno.test("read data actual", () => {
   const input = day.readData();
 
-  assertEquals(day.part1(input), part1Solution);
+  assertNotEquals(input, []);
 });
 
-Deno.test("part 2 real", () => {
-  const input = day.readData();
-
-  assertEquals(day.part2(input), part2Solution);
-});
-
-Deno.test("parse contents", () => {
+Deno.test("parse contents example", () => {
   const input =
     `7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
@@ -46,24 +40,36 @@ Deno.test("parse contents", () => {
 22 11 13  6  5
 2  0 12  3  7`;
 
-  assertEquals(day.parseContents(input), exampleInput());
+  assertEquals(day.parseContents(input), exampleData());
 });
 
 Deno.test("part 1 example", () => {
-  const input = exampleInput();
+  const input = exampleData();
 
   assertEquals(day.part1(input), 4512);
 });
 
+Deno.test("part 1 actual", () => {
+  const input = day.readData();
+
+  assertEquals(day.part1(input), part1Solution);
+});
+
 Deno.test("part 2 example", () => {
-  const input = exampleInput();
+  const input = exampleData();
 
   assertEquals(day.part2(input), 1924);
 });
 
-function exampleInput(): day.Input {
-  return {
-    numbers: [
+Deno.test("part 2 actual", () => {
+  const input = day.readData();
+
+  assertEquals(day.part2(input), part2Solution);
+});
+
+function exampleData(): day.Input {
+  return new day.Input(
+    [
       7,
       4,
       9,
@@ -92,7 +98,7 @@ function exampleInput(): day.Input {
       26,
       1,
     ],
-    boards: [
+    [
       [
         22,
         13,
@@ -175,7 +181,7 @@ function exampleInput(): day.Input {
         7,
       ],
     ],
-  };
+  );
 }
 
 bench({

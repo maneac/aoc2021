@@ -2,29 +2,24 @@ package main
 
 import "testing"
 
-const (
-	part1Solution = 340056
-	part2Solution = 96592275
-)
-
 func TestPart1(t *testing.T) {
 	tests := map[string]struct {
-		data     []int
-		expected int
+		data     Input
+		expected string
 	}{
 		"example": {
-			data:     []int{0, 1, 1, 2, 2, 2, 4, 7, 14, 16},
-			expected: 37,
+			data:     Input{0, 1, 1, 2, 2, 2, 4, 7, 14, 16},
+			expected: "37",
 		},
 		"actual": {
-			data:     readData(),
+			data:     readData("../../data"),
 			expected: part1Solution,
 		},
 	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			actual := part1(test.data)
+			actual := test.data.Part1()
 
 			if actual != test.expected {
 				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
@@ -35,22 +30,22 @@ func TestPart1(t *testing.T) {
 
 func TestPart2(t *testing.T) {
 	tests := map[string]struct {
-		data     []int
-		expected int
+		data     Input
+		expected string
 	}{
 		"example": {
-			data:     []int{0, 1, 1, 2, 2, 2, 4, 7, 14, 16},
-			expected: 168,
+			data:     Input{0, 1, 1, 2, 2, 2, 4, 7, 14, 16},
+			expected: "168",
 		},
 		"actual": {
-			data:     readData(),
+			data:     readData("../../data"),
 			expected: part2Solution,
 		},
 	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			actual := part2(test.data)
+			actual := test.data.Part2()
 
 			if actual != test.expected {
 				t.Fatalf("Expected: %v\nActual: %v", test.expected, actual)
@@ -61,25 +56,25 @@ func TestPart2(t *testing.T) {
 
 func BenchmarkReadData(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		if readData() == nil {
+		if readData("../../data") == nil {
 			b.FailNow()
 		}
 	}
 }
 
 func BenchmarkPart1(b *testing.B) {
-	data := readData()
+	data := readData("../../data")
 	for i := 0; i < b.N; i++ {
-		if part1(data) != part1Solution {
+		if data.Part1() != part1Solution {
 			b.FailNow()
 		}
 	}
 }
 
 func BenchmarkPart2(b *testing.B) {
-	data := readData()
+	data := readData("../../data")
 	for i := 0; i < b.N; i++ {
-		if part2(data) != part2Solution {
+		if data.Part2() != part2Solution {
 			b.FailNow()
 		}
 	}
