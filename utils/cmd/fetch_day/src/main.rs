@@ -534,13 +534,7 @@ edition = "2021"
     write(
         src_dir.join("main.rs"),
         format!(
-            r#"#![deny(clippy::all)]
-#![feature(test)]
-extern crate test;
-
-use std::{{fs::read_to_string, path::Path}};
-
-type Input = Vec<String>;
+            r#"use day_{}::*;
 
 fn main() {{
     let data = read_data("./data");
@@ -548,9 +542,29 @@ fn main() {{
     println!("Part 1: {{}}", part_1(&data));
     println!("Part 2: {{}}", part_2(&data));
 }}
+"#,
+            day
+        ),
+    )
+    .unwrap();
 
-fn read_data(data_dir: &str) -> Input {{
-    let contents = read_to_string(Path::new(data_dir).join("day_{0}.txt")).unwrap();
+    write(
+        src_dir.join("lib.rs"),
+        format!(
+            r#"#![deny(clippy::all)]
+#![feature(test)]
+extern crate test;
+
+use std::{{fs::read_to_string, path::Path}};
+
+#[derive(Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Input(usize);
+
+pub const PART_1: usize = 0;
+pub const PART_2: usize = 0;
+
+pub fn read_data(data_dir: &str) -> Input {{
+    let contents = read_to_string(Path::new(data_dir).join("day_{}.txt")).unwrap();
 
     parse_contents(contents.trim())
 }}
@@ -559,11 +573,11 @@ fn parse_contents(contents: &str) -> Input {{
     todo!()
 }}
 
-fn part_1(input: &Input) -> usize {{
+pub fn part_1(input: &Input) -> usize {{
     todo!()
 }}
 
-fn part_2(input: &Input) -> usize {{
+pub fn part_2(input: &Input) -> usize {{
     todo!()
 }}
 
@@ -572,8 +586,19 @@ mod tests {{
     use super::*;
     use test::Bencher;
 
-    const PART_1: usize = 0;
-    const PART_2: usize = 0;
+    mod total {{
+        use super::*;
+
+        #[bench]
+        fn actual(b: &mut Bencher) {{
+            b.iter(|| {{
+                let data = read_data("../../data");
+                assert_ne!(data, Input::default());
+                assert_eq!(PART_1, part_1(&data));
+                assert_eq!(PART_2, part_2(&data));
+            }})
+        }}
+    }}
 
     mod read_data {{
         use super::*;
@@ -597,12 +622,7 @@ mod tests {{
         }}
 
         #[test]
-        fn example() {{
-            run(&Case {{
-                input: "",
-                expected: example_data(),
-            }})
-        }}
+        fn example() {{}}
 
         fn run(test: &Case) {{
             assert_eq!(test.expected, parse_contents(test.input))
@@ -615,14 +635,6 @@ mod tests {{
         struct Case {{
             data: Input,
             expected: usize,
-        }}
-
-        #[test]
-        fn example() {{
-            run(&Case {{
-                data: example_data(),
-                expected: todo!(),
-            }})
         }}
 
         #[bench]
@@ -648,14 +660,6 @@ mod tests {{
             expected: usize,
         }}
 
-        #[test]
-        fn example() {{
-            run(&Case {{
-                data: example_data(),
-                expected: todo!(),
-            }})
-        }}
-
         #[bench]
         fn actual(b: &mut Bencher) {{
             let case = Case {{
@@ -669,10 +673,6 @@ mod tests {{
         fn run(test: &Case) {{
             assert_eq!(test.expected, part_2(&test.data))
         }}
-    }}
-
-    fn example_data() -> Input {{
-        todo!()
     }}
 }}
 "#,
