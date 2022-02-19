@@ -1,7 +1,5 @@
 #![deny(clippy::all)]
 #![feature(test)]
-#![feature(int_abs_diff)]
-#![feature(available_parallelism)]
 #![feature(drain_filter)]
 extern crate test;
 
